@@ -1,0 +1,69 @@
+/*
+作者：刁吕涛
+创建时间：2022年07月18日
+销售明细流程
+*/
+
+// 华为网站的公司及登录账号对应字典
+Dim companyNameToUser = {"城投": "13544480167", "合神": "hfszsm", "北神": "szshbj"}
+
+TracePrint "————生成销售明细表——————"
+If g_dictGlobal["isEx"]
+	Return retValue
+Else
+	
+End If
+
+Try
+	//屏幕提示机器人运行状态
+	PrintToScreen.DrawText(objWindow,"机器人下载文件中，请勿操作电脑",28,[255,0,0])
+	
+	//将读取到的账号密码变为{账号：密码}
+	userPwdDict={}
+	For i = 0 To Len(g_dictGlobal["华为网站账号"])-1 Step 1 
+		userPwdDict[g_dictGlobal["华为网站账号"][i]] = g_dictGlobal["华为网站密码"][i]
+	Next
+	
+	//下载获取最新的华为订单表路径
+	fieldList = ["华为订单号", "订单版本", "运输方式"]
+	orderFileList = 华为订单表下载.获取最新华为订单表(g_dictGlobal["华为网址"], g_dictGlobal["华为网站账号"], g_dictGlobal["华为网站密码"], g_dictGlobal["文件下载路径"], fieldList)
+	//下载获取最新的华为全字段报表路径
+	allFieldfpList = 华为订单全字段报表下载.获取最新华为订单全字段报表(g_dictGlobal["华为网址"], g_dictGlobal["华为网站账号"], g_dictGlobal["华为网站密码"], g_dictGlobal["文件下载路径"], g_dictGlobal["各汇总表路径"])
+	
+	//读取下单费用表和毛利分析结果表，返回字典{"下单df": 下单数据df, "已处理df": 已处理的下单数据df, "剩余付款df": 未处理的付款数据df}
+	initResultDict = func.getOriginOrderData(g_analyzePath, g_orderCostPath)
+	//初始化需要下载“里程碑付款&调整台帐”表的合同号（授信除外），返回字典{"需要下载的合同号Dict": {公司：[下单合同号]}}, "授信字典": {下单合同号: [订单激活时间, 订单变更前金额]}}
+	initOrderDict = func.initDownLoadOrder(initResultDict["下单df"], allFieldfpList)
+	
+	//按照不同的账号，分别下载该账号下的“里程碑付款&调整台帐”表
+	orderFileDict = {} //保存各“下单合同号”下载的文件路径
+	For Each companyName,orderList In initOrderDict["需要下载的合同号Dict"]
+		logUser = companyNameToUser[companyName]
+		logPwd = userPwdDict[logUser]
+		For Each orderNum In orderList
+			// incentiveFlag：当前下载的“下单合同号”的“使用激励金额”是否有记录
+			incentiveFlag = func.jud_in(orderNum, g_incentiveDict)
+			downloadResult = 合同回款下载.里程碑付款_调整台帐下载(g_dictGlobal["华为网址"], logUser, logPwd, orderNum, g_dictGlobal["文件下载路径"], incentiveFlag)
+			orderFileDict[orderNum] = downloadResult[0]
+			//downloadResult[1]为返回的“使用激励金额”，若不为None，就更新“使用激励金额”字典g_incentiveDict
+			If downloadResult[1]: 
+				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: downloadResult[1]}})
+			End If
+		Next
+	Next	
+	
+	
+	PrintToScreen.CleanText(objWindow)
+Catch Ex
+	Log.Error(CStr(Ex))
+	g_dictGlobal["isEx"] = True
+End Try
+//判读出异常后，将g_dictGlobal["isEx"]设置为TRUE
+
+
+TracePrint "——————生成销售明细表——————"
+
+
+
+
+
