@@ -1,0 +1,92 @@
+/*
+作者：XXX
+创建时间：XXXX年XX月XX日
+初始化操作
+*/
+
+Dim bRet = ""
+g_configPath="E:\\Uibot项目文件\\总配置.xlsx"
+
+//屏幕提示机器人运行状态
+If objWindow <> ""
+	PrintToScreen.CleanText(objWindow)
+	PrintToScreen.CloseWindow(objWindow)
+End If
+objWindow = PrintToScreen.CreateWindow({"height":105,"resolution":{"height":1080,"width":1920},"width":900,"x":600,"y":0},True)
+PrintToScreen.DrawText(objWindow,"机器人获取配置中，请勿操作电脑",28,[255,0,0])
+TracePrint "——————进入初始化模块——————"
+Try
+	g_iRetryNum = g_iRetryNum + 1
+	
+	//关闭相关软件
+	App.Kill("chrome.exe")
+	App.Kill("EXCEL.EXE")
+	App.Kill("iexplore.exe")
+	App.Kill("saplogon.exe")
+	App.Kill("busobj.exe")
+	
+	//若g_dictGlobal无配置内容，需要进行获取
+	If Len(g_dictGlobal)=0
+		//获取配置文件数据
+		g_dictGlobal = func.getConfigDict(g_configPath)
+		g_dictGlobal["文件下载路径"] = func.getSaveDir(g_dictGlobal["文件下载路径"])
+		g_dictGlobal["结果保存路径"] = func.getSaveDir(g_dictGlobal["结果保存路径"])
+		//创建文件夹
+		For Each path In [g_dictGlobal["文件下载路径"], g_dictGlobal["结果保存路径"]]
+			bRet = File.FolderExists(path)
+			If Not bRet
+				File.CreateFolder(path)
+			End If
+		Next
+		
+		//流程异常记录
+		g_dictGlobal["isEx"] = False
+		//设定重试次数，有Commander一般放在Commander上，没有Commander一般放在本地Config文件中
+		g_dictGlobal["maxRetryNum"] = 3
+		//获取“激励金额记录文件”路径，若不存在则创建
+		g_dictGlobal["incentiveRecordPath"] = func.getIncentiveRecordPath(g_dictGlobal["文件下载路径"]) 
+		Log.Info("获取到配置g_dictGlobal为："&CStr(g_dictGlobal))
+	Else
+		//g_dictGlobal有配置内容，说明本次为重试情况，将g_dictGlobal["isEx"]=False
+		g_dictGlobal["isEx"] = False
+		Log.Info("配置g_dictGlobal已获取："&CStr(g_dictGlobal))
+	End If
+	
+	
+	//获取下单费用基础表路径,如果不为空说明已经选择过下单费用表
+	If g_orderCostPath = ""
+		g_orderCostPath = Dialog.OpenFile("","Excel文件|*.xlsx|任意文件|*","请选择下单费用基础表")
+		If g_orderCostPath = ""
+			Log.Info("未选择下单费用文件，流程结束")
+			exit()
+		Else
+			Log.Info("选择的下单费用表路径为："&g_orderCostPath)
+		End If
+	Else
+		Log.Info("已选择下单费用表："&g_orderCostPath)
+	End If
+	
+	//获取毛利分析结果表路径,如果不为空说明已经选择过毛利分析表
+	If g_analyzePath = ""
+		g_analyzePath = Dialog.OpenFile("","Excel文件|*.xlsx|任意文件|*","请选择毛利分析结果表")
+		If g_analyzePath = ""
+			Log.Info("未选择毛利分析文件，流程结束")
+			exit()
+		Else
+			Log.Info("选择的毛利分析表路径为："&g_analyzePath)
+		End If
+	Else
+		Log.Info("已选择毛利分析表："&g_analyzePath)
+	End If
+	
+	//读取激励记录表，返回字典{下单合同号：使用激励金额}
+	g_incentiveDict = func.readIncentiveRecord(g_dictGlobal["incentiveRecordPath"])
+	
+Catch ex
+	Log.Error(CStr(ex))
+	g_dictGlobal["isEx"] = True
+End Try
+
+TracePrint "——————退出初始化模块——————"
+PrintToScreen.CleanText(objWindow)
+
