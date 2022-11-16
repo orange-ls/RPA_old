@@ -1,0 +1,38 @@
+/*
+1.全局变量g_configPath修改
+2.全局变量g_configPath文件中的路径修改
+*/
+
+/*
+3.华为网址登陆输入框，设置文本无效时变为“在目标中输入”
+*/
+
+//输入账号密码
+#icon("@res:5kc8aq0p-5kse-3hh2-2ul7-e4t13cip0mvl.png")
+UiElement.SetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"uid"}]},username,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+#icon("@res:5kqjtqku-r1fo-ott8-rl7e-r24ti906k3qv.png")
+UiElement.SetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"password"}]},pwd,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+
+//输入账号密码
+通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"uid"}]}, username)
+#icon("@res:5kqjtqku-r1fo-ott8-rl7e-r24ti906k3qv.png")
+Keyboard.InputText({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"password"}]},pwd,True,20,10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":500,"bSetForeground":True,"sSimulate":"message","bValidate":True,"bClickBeforeInput":False})
+
+
+/*
+4.华为订单表下载，日期输入设置文本无效时变为“在目标中输入”（先修改属性，默认readonly）
+*/
+
+//输入开始日期和结束日期
+#icon("@res:7kgnfc8b-numh-qrra-6dvm-25g79ttcugt9.png")
+UiElement.SetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/visi/#!prmnext/framework/frame.html?v*"},{"tag":"INPUT","name":"timeFromDate","parentid":"customDateInput"}]},startDate,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+#icon("@res:2h6un53k-vv0f-efuh-bva9-p3u1na9q4n9n.png")
+UiElement.SetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/visi/#!prmnext/framework/frame.html?v*"},{"tag":"INPUT","name":"timeToDate","parentid":"customDateInput"}]},endDate,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+
+//输入开始日期和结束日期
+sRet = WebBrowser.RunJS(hWeb,'''function(){var iframeEle = document.querySelector("iframe.epartner-iframe").contentWindow.document;var inputEles = iframeEle.querySelectorAll("#customDateInput > input");inputEles[0].removeAttribute("readonly");inputEles[1].removeAttribute("readonly");return true}''',True,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/visi/#!prmnext/framework/frame.html?v*"},{"tag":"INPUT","name":"timeFromDate","parentid":"customDateInput"}]}, startDate)
+通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/visi/#!prmnext/framework/frame.html?v*"},{"tag":"INPUT","name":"timeToDate","parentid":"customDateInput"}]}, endDate)
+#icon("@res:pse73mn5-3mr1-qia7-9c16-ra6248t2ct9j.png")
+Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/visi/#!prmnext/framework/frame.html?v*"},{"tag":"INPUT","id":"srCust"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"message","bMoveSmoothly":False})
+
