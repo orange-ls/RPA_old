@@ -47,7 +47,7 @@ Try
 			orderFileDict[orderNum] = downloadResult[0]
 			//downloadResult[1]为返回的“使用激励金额”，若不为None，就更新“使用激励金额”字典g_incentiveDict
 			If downloadResult[1]: 
-				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: downloadResult[1]}})
+				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: downloadResult[1]})
 			End If
 		Next
 	Next	
@@ -62,8 +62,3 @@ End Try
 
 
 TracePrint "——————生成销售明细表——————"
-
-
-
-
-
