@@ -50,7 +50,9 @@ Try
 				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: downloadResult[1]})
 			End If
 		Next
-	Next	
+	Next
+	//将保存的所有{下单合同号：使用激励金额}保存到“使用激励金额记录表中”
+	updateIncentiveRecord(g_dictGlobal["激励金额记录文件路径"], g_incentiveDict)
 	
 	
 	PrintToScreen.CleanText(objWindow)
