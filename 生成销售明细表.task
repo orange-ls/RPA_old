@@ -55,7 +55,7 @@ Try
 	updateIncentiveRecord(g_dictGlobal["激励金额记录文件路径"], g_incentiveDict)
 	Log.Info("文件已全部下载，准备进行数据处理")
 	
-    
+	
 	
 	
 	PrintToScreen.CleanText(objWindow)
