@@ -71,9 +71,9 @@ Try
 	df_ktFinal = func.calDataStep_KT(initResultDict["下单df"])
 	
 	//处理"超聚变"数据，返回列表[超聚变df结果数据，超聚变数据的下单合同号列表]
-	ycResultDict = func.calDataStep_CJB(initResultDict["下单df"], initResultDict["剩余付款df"], g_dictGlobal["超聚变付款外挂表路径"])
-	df_cjbFinal = ycResultDict[0]
-	orderList_CJB = ycResultDict[1]
+	cjbResultDict = func.calDataStep_CJB(initResultDict["下单df"], initResultDict["剩余付款df"], g_dictGlobal["超聚变付款外挂表路径"])
+	df_cjbFinal = cjbResultDict[0]
+	orderList_CJB = cjbResultDict[1]
 	
 	// 合并基础数据和处理的数据，返回"下单费用结果表"路径
 	resultPath = func.finishOperateAndSave(initResultDict["已处理df"], df_originFinal, df_ktFinal, df_cjbFinal, initResultDict["剩余付款df"], orderList_YC, orderList_CJB, g_dictGlobal["结果保存路径"], g_analyzePath, g_orderCostPath)
