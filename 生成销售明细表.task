@@ -67,11 +67,10 @@ Try
     //处理"超聚变"数据，返回列表[超聚变df结果数据，超聚变数据的下单合同号列表]
 	ycResultDict = calDataStep_CJB(initResultDict["下单df"], initResultDict["剩余付款df"], g_dictGlobal["超聚变付款外挂表路径"])
 	df_cjbFinal = ycResultDict[0]
-	orderList_cjb = ycResultDict[1]
+	orderList_CJB = ycResultDict[1]
 	
 	// 合并基础数据和处理的数据
-    finishOperateAndSave(initResultDict["已处理df"], df_originFinal, df_ktFinal, df_cjbFinal, resultPath, df_noUsePay, orderList_YC, orderList_CJB)
-	
+	finishOperateAndSave(initResultDict["已处理df"], df_originFinal, df_ktFinal, df_cjbFinal, initResultDict["剩余付款df"], orderList_YC, orderList_CJB, g_dictGlobal["结果保存路径"])
 	PrintToScreen.CleanText(objWindow)
 Catch Ex
 	Log.Error(CStr(Ex))
