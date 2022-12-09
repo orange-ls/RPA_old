@@ -52,7 +52,7 @@ Try
 		Next
 	Next
 	//将保存{下单合同号：使用激励金额}保存到“激励金额记录表”中
-	updateIncentiveRecord(g_dictGlobal["激励金额记录文件路径"], g_incentiveDict)
+	func.updateIncentiveRecord(g_dictGlobal["激励金额记录文件路径"], g_incentiveDict)
 	Log.Info("文件已全部下载，准备进行数据处理")
 	
 	//屏幕提示机器人运行状态
@@ -60,23 +60,23 @@ Try
 	PrintToScreen.DrawText(objWindow,"机器人处理数据中，请勿操作电脑",28,[255,0,0])
 	
 	//处理"华为原厂"数据，返回列表[华为原厂df结果数据，华为原厂数据的下单合同号列表]
-	ycResultDict = calDataStep_YC(initOrderDict["华为原厂df"], initOrderDict["授信字典"], g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList)
+	ycResultDict = func.calDataStep_YC(initOrderDict["华为原厂df"], initOrderDict["授信字典"], g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList)
 	df_originFinal = ycResultDict[0]
 	orderList_YC = ycResultDict[1]
 	
 	//处理"鲲泰"数据，返回：鲲泰df结果数据
-	df_ktFinal = calDataStep_KT(initResultDict["下单df"])
+	df_ktFinal = func.calDataStep_KT(initResultDict["下单df"])
 	
 	//处理"超聚变"数据，返回列表[超聚变df结果数据，超聚变数据的下单合同号列表]
-	ycResultDict = calDataStep_CJB(initResultDict["下单df"], initResultDict["剩余付款df"], g_dictGlobal["超聚变付款外挂表路径"])
+	ycResultDict = func.calDataStep_CJB(initResultDict["下单df"], initResultDict["剩余付款df"], g_dictGlobal["超聚变付款外挂表路径"])
 	df_cjbFinal = ycResultDict[0]
 	orderList_CJB = ycResultDict[1]
 	
 	// 合并基础数据和处理的数据，返回"下单费用结果表"路径
-	resultPath = finishOperateAndSave(initResultDict["已处理df"], df_originFinal, df_ktFinal, df_cjbFinal, initResultDict["剩余付款df"], orderList_YC, orderList_CJB, g_dictGlobal["结果保存路径"], g_analyzePath, g_orderCostPath)
+	resultPath = func.finishOperateAndSave(initResultDict["已处理df"], df_originFinal, df_ktFinal, df_cjbFinal, initResultDict["剩余付款df"], orderList_YC, orderList_CJB, g_dictGlobal["结果保存路径"], g_analyzePath, g_orderCostPath)
 	
 	// 设置下单费用结果表格式
-	setStyle(resultPath)
+	func.setStyle(resultPath)
 	
 	PrintToScreen.CleanText(objWindow)
 	
