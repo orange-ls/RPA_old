@@ -61,8 +61,13 @@ Try
 	df_originFinal = ycResultDict[0]
 	orderList_YC = ycResultDict[1]
 
-    //处理"鲲泰"数据，返回列表[华为原厂df结果数据，华为原厂数据的下单合同号列表]
-	
+    //处理"鲲泰"数据，返回：鲲泰df结果数据
+	df_ktFinal = calDataStep_KT(initResultDict["下单df"])
+
+    //处理"超聚变"数据，返回列表[华为原厂df结果数据，华为原厂数据的下单合同号列表]
+	ycResultDict = calDataStep_YC(initOrderDict["华为原厂df"], initOrderDict["授信字典"], g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList)
+	df_originFinal = ycResultDict[0]
+	orderList_YC = ycResultDict[1]
 	
 	
 	
