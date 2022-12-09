@@ -44,7 +44,7 @@ Try
 		//设定重试次数，有Commander一般放在Commander上，没有Commander一般放在本地Config文件中
 		g_dictGlobal["maxRetryNum"] = 3
 		//获取“激励金额记录文件”路径，若不存在则创建
-		g_dictGlobal["incentiveRecordPath"] = func.getIncentiveRecordPath(g_dictGlobal["文件下载路径"]) 
+		g_dictGlobal["激励金额记录文件路径"] = func.getIncentiveRecordPath(g_dictGlobal["文件下载路径"]) 
 		Log.Info("获取到配置g_dictGlobal为："&CStr(g_dictGlobal))
 	Else
 		//g_dictGlobal有配置内容，说明本次为重试情况，将g_dictGlobal["isEx"]=False
@@ -80,7 +80,7 @@ Try
 	End If
 	
 	//读取激励记录表，返回字典{下单合同号：使用激励金额}
-	g_incentiveDict = func.readIncentiveRecord(g_dictGlobal["incentiveRecordPath"])
+	g_incentiveDict = func.readIncentiveRecord(g_dictGlobal["激励金额记录文件路径"])
 	
 Catch ex
 	Log.Error(CStr(ex))
