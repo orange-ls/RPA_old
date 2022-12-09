@@ -55,7 +55,7 @@ Try
 	updateIncentiveRecord(g_dictGlobal["激励金额记录文件路径"], g_incentiveDict)
 	Log.Info("文件已全部下载，准备进行数据处理")
 	
-	//initResultDict["已处理df"]、df_originFinal、orderList_YC
+	//initResultDict["已处理df"]、df_originFinal、orderList_YC、df_ktFinal、df_cjbFinal、orderList_cjb
 	//处理"华为原厂"数据，返回列表[华为原厂df结果数据，华为原厂数据的下单合同号列表]
 	ycResultDict = calDataStep_YC(initOrderDict["华为原厂df"], initOrderDict["授信字典"], g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList)
 	df_originFinal = ycResultDict[0]
@@ -64,12 +64,13 @@ Try
     //处理"鲲泰"数据，返回：鲲泰df结果数据
 	df_ktFinal = calDataStep_KT(initResultDict["下单df"])
 
-    //处理"超聚变"数据，返回列表[华为原厂df结果数据，华为原厂数据的下单合同号列表]
-	ycResultDict = calDataStep_YC(initOrderDict["华为原厂df"], initOrderDict["授信字典"], g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList)
-	df_originFinal = ycResultDict[0]
-	orderList_YC = ycResultDict[1]
+    //处理"超聚变"数据，返回列表[超聚变df结果数据，超聚变数据的下单合同号列表]
+	ycResultDict = calDataStep_CJB(initResultDict["下单df"], initResultDict["剩余付款df"], g_dictGlobal["超聚变付款外挂表路径"])
+	df_cjbFinal = ycResultDict[0]
+	orderList_cjb = ycResultDict[1]
 	
-	
+	// 合并基础数据和处理的数据
+    finishOperateAndSave(df_base, df_originFinal, df_ktFinal, df_cjbFinal, resultPath, df_noUsePay, orderList_YC, orderList_CJB)
 	
 	PrintToScreen.CleanText(objWindow)
 Catch Ex
