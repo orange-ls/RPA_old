@@ -102,6 +102,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		//选择“导出台账”为“里程碑付款&调整台帐”
 		#icon("@res:8e63i7rp-1hv8-vv6u-4sl3-bt1hk48clr4n.png")
 		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"exportType_ddl","aaname":"里程碑付款&调整台帐"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+    
 	End If
 	
 	
@@ -180,10 +181,10 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		#icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
 		UiElement.Wait({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},"show",15000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		//输入文件名
+		// #icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
+		// UiElement.SetValue({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		#icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
-		UiElement.SetValue({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		#icon("@res:default.png")
-		Keyboard.InputText({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},"aaacfs_ptn_contract_payment_back_69472951_20221209182657793.xlsx",True,20,10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":500,"bSetForeground":True,"sSimulate":"uia","bValidate":False,"bClickBeforeInput":False})
+		Keyboard.InputText({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,True,20,10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":500,"bSetForeground":True,"sSimulate":"uia","bValidate":False,"bClickBeforeInput":False})
 		//点击保存
 		#icon("@res:b636f62i-4moa-037q-jpba-5hf8ik645q6r.png")
 		Mouse.Action({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"Button","title":"保存(&S)","ctrlid":1,"aaname":"保存(S)"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
