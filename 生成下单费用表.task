@@ -52,7 +52,10 @@ Try
 		Next
 	Next
 	//将保存{下单合同号：使用激励金额}保存到“激励金额记录表”中
-	func.updateIncentiveRecord(g_dictGlobal["激励金额记录文件路径"], g_incentiveDict)
+    If Len(g_incentiveDict) <> 0
+        func.updateIncentiveRecord(g_dictGlobal["激励金额记录文件路径"], g_incentiveDict)
+    End If
+	
 	Log.Info("文件已全部下载，准备进行数据处理")
 	
 	//屏幕提示机器人运行状态
