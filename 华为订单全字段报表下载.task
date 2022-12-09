@@ -1,0 +1,252 @@
+/*
+作者：刁吕涛
+创建时间：2022年08月30日
+销售明细流程
+*/
+Dim exportTime = ""
+Dim temp = ""
+Dim name = ""
+Dim sRet = ""
+Dim eleClass = ""
+Dim row = ""
+Dim finishFlag = ""
+Dim numFlag = ""
+Dim bRet = ""
+Dim hWeb = ""
+Dim iRet = ""
+
+//返回下载的文件路径
+Function 华为订单全字段报表下载(url, username, pwd, startDate, endDate, saveDir)
+	/*
+    url:华为网址
+    username:登陆用户名
+    pwd :登陆密码
+    startDate:查询开始日期 yyyy-mm-dd HH:MM:SS
+    endDate:查询结束日期 yyyy-mm-dd HH:MM:SS
+    saveDir:文件保存目录
+    */
+	
+	Log.Info("用户:"&username&"开始华为订单全字段报表下载")
+	
+	//日期从yyyy-mm-dd HH:MM:SS转为yyyymmddHHMMSS的格式，方便记录
+	startDate_ = Replace(startDate,"-","",False)
+	startDate_ = Replace(startDate," ","",False)
+	startDate_ = Replace(startDate,":","",False)
+	endDate_ = Replace(endDate,"-","",False)
+	endDate_ = Replace(endDate," ","",False)
+	endDate_ = Replace(endDate,":","",False)
+	//文件名："登陆账号"_订单全字段报表（"开始日期"-"结束日期"）.xlsm
+	filename = username&"_"&"订单全字段报表（"&startDate_&"-"&endDate_&"）.xlsm"
+	filePath = saveDir & "\\" & filename
+	//判断文件是否已下载
+	If File.FileExists(filePath)
+		Log.Info("用户:"&username&"华为订单全字段报表已下载，路径为："&filePath)
+		Return filePath
+	End If
+	
+	登陆华为官网.登陆华为官网(url, username, pwd)
+	
+	//绑定浏览器
+	hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	
+	//后台点击“项目与交易”中“订单”下的“订单全字段报表”
+	#icon("@res:j6l3e2en-ku78-2eva-d3gk-aal0j9mrhfld.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","innertext":"*订单全字段报表*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	//等待"导出"按钮出现
+	#icon("@res:tkfqd92b-o5oe-kd9c-4nh1-tjmam84p080c.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"BUTTON","aaname":"*导出*"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200})
+	
+	//输入"订单激活开始日期"和"订单激活结束日期"
+	//sRet = WebBrowser.RunJS(hWeb,'''function(){var iframeEle = document.querySelector("iframe.epartner-iframe").contentWindow.document;var inputEles = iframeEle.querySelectorAll("#customDateInput > input");inputEles[0].removeAttribute("readonly");inputEles[1].removeAttribute("readonly");return true}''',True,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"INPUT","type":"text","idx":4}]}, startDate)
+	//点击"订单激活开始日期"label收起日期输入弹窗
+	#icon("@res:neko2neo-bqaa-s9n2-tgc0-rudud6mg39vm.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"LABEL","aaname":"订单激活开始日期"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"INPUT","type":"text","idx":5}]}, endDate)
+	//点击"订单激活结束日期"label收起日期输入弹窗
+	#icon("@res:d3qe7lsg-ks0e-i412-qj4k-51h1686j8cbc.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"LABEL","aaname":"订单激活结束日期"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	
+	//点击"导出"
+	#icon("@res:tkfqd92b-o5oe-kd9c-4nh1-tjmam84p080c.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"BUTTON","aaname":"*导出*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	//点击"确认"
+	#icon("@res:b5hqln2a-28ti-msh2-o4pf-d2e83pm03cmm.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"BUTTON","aaname":"*确认*","idx":1}]},"left","click",15000,{"bContinueOnError":False,"iDelayAfter":0,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	//获取导出时间
+	exportTime1 = Time.Now()
+	Log.Info("用户导出时间为："&Time.Format(exportTime1,"yyyy-mm-dd hh:mm:ss"))
+	
+	//等待弹窗出现
+	#icon("@res:ah4hkpet-6uhc-l44m-q5td-l3mc0ocjpa0m.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"DIV","css-selector":"body>div>div>div","idx":7}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":0,"iDelayBefore":0})
+	exportTime2 = Time.Now()
+	Log.Info("系统提示时间为："&Time.Format(exportTime2,"yyyy-mm-dd hh:mm:ss"))
+	//判断弹窗的文本，看是正常导出、导出数量>10000行无法导出还是无数据
+	#icon("@res:ah4hkpet-6uhc-l44m-q5td-l3mc0ocjpa0m.png")
+	sRet = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"DIV","css-selector":"body>div>div>div","idx":7}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	If InStr(sRet,"超过上限",1,False) <> 0
+		//弹窗文本提示“查询数据超过上限10000行，请缩小查询条件范围重新导出”，用户弹窗提示人工补充数据后再重新执行
+		iRet = Dialog.MsgBox("账号"&username&"下载订单全字段报表提示消息为："&sRet&"\n请人工补充数据到汇总表后重新执行","UiBot","0",3,0)
+		exit()
+	End If
+	If InStr(sRet,"没有符合条件的数据",1,False) <> 0
+		//弹窗文本提示“没有符合条件的数据”
+		Log.Info("账号"&username&"下载订单全字段报表提示消息为："&sRet)
+		Return None
+	End If
+	//点击弹窗中的“请到我的华为->我的导出”
+	#icon("@res:1tp6msb2-0ghi-o3q4-dtdc-ma3ajj6d2qmb.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"A","aaname":"*我的导出*","css-selector":"body>div>div>div>div>a[target=__blank]"}]},"left","click",15000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	
+	等待搜索结果页面加载完成()
+	
+	//查找导出项所在的行，默认超时时间300s
+	startTime = Time.Now()  //开始时间
+	finishFlag = False  //循环结束标识
+	row = "2" //导出项默认在第一条（index=2）
+	//点击导出时间为exportTime1，弹窗显示导出任务时间为exportTime2，查找的时间范围为exportTime1~exportTime2，但服务器时间和本地时间有误差，以3s计算
+	timeDiff = 5
+	exportTimeStr = ""
+	exportTime1 = Time.DateAdd("s",-1*timeDiff,exportTime1)
+	exportTime2 = Time.DateAdd("s",timeDiff,exportTime2)
+	Log.Info("判断创建时间的日期范围为："&Time.Format(exportTime1,"yyyy-mm-dd hh:mm:ss")&"~"&Time.Format(exportTime2,"yyyy-mm-dd hh:mm:ss"))
+	Do While True
+		timeDiff = Time.DateDiff("s",startTime,Time.Now())
+		If timeDiff < 300 
+			//查找结果页面的15行数据
+			For i = 1 To 15 Step 1 
+				row = CStr(i+1)
+				//获取文件名
+				#icon("@res:pkvf8n8k-tcdr-smme-fmt6-aii8f7afn0hp.png")
+				name = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":row,"tableCol":"4"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+				//获取导出状态
+				#icon("@res:ss9o4gi9-fbt2-hbco-elgj-5dap8s151uct.png")
+				status = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":row,"tableCol":"3"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+				//获取创建时间
+				#icon("@res:kk6dill0-pi3m-iktc-4o3v-b73arlfc3fin.png")
+				exportTimeStr = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":row,"tableCol":"2"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+				//判断创建时间是否在exportTime1~exportTime2范围内
+				exportTime = Time.CDate(exportTimeStr, "yyyy.mm.dd.hh.mm.ss")
+				iRet1 = Time.DateDiff("s",exportTime1,exportTime)
+				iRet2 = Time.DateDiff("s",exportTime,exportTime2)
+				If iRet1 >= 0 And iRet2 >= 0
+					iRet = True
+				Else
+					iRet = False
+				End If
+				If InStr(name,"订单全字段报表",1,False) <> 0 And iRet And status = "成功"
+					finishFlag = True
+					Break
+				End If
+				//若已查询15行数据或创建时间低于exportTime1,刷新页面继续判断
+				If i=15 Or Time.DateDiff("s",exportTime1,exportTime) < 0
+					Log.Info("未获取到符合条件的数据，准备重新搜索后查找")
+					Delay(5000)
+					//刷新并等待等待搜索结果页面加载完成
+					WebBrowser.Refresh(hWeb,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+					等待搜索结果页面加载完成()
+					Break
+				End If
+			Next
+			If finishFlag
+				Break
+			End If
+		Else
+			Throw "导出华为订单全字段报表超时"
+		End If
+	Loop
+	Log.Info("成功获取到导出项")
+	
+	
+	//点击导出项的文件名
+	#icon("@res:pkvf8n8k-tcdr-smme-fmt6-aii8f7afn0hp.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":row,"tableCol":"4"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"message","bMoveSmoothly":False})
+	//等待跳转页面的“下载”按钮出现
+	#icon("@res:tg4aclo7-ngm2-f14j-1u8b-md69kvg92n04.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"BUTTON","idx":1,"aaname":"*下*载*"}]},"show",20000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	#icon("@res:2ou6sebb-fifk-46ti-s7vo-4ls90b31gur1.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"BUTTON","idx":1,"aaname":"*下*载*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	
+	//等待文件名输入框出现
+	#icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
+	UiElement.Wait({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},"show",20000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	//输入文件名
+	#icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
+	UiElement.SetValue({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	//点击保存
+	#icon("@res:b636f62i-4moa-037q-jpba-5hf8ik645q6r.png")
+	Mouse.Action({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"Button","title":"保存(&S)","ctrlid":1,"aaname":"保存(S)"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	
+	//等待文件下载完成
+	startTime = Time.Now()  //开始时间
+	Do While Time.DateDiff("s",startTime,Time.Now()) < 300
+		bRet = File.FileExists(filePath)
+		If bRet
+			Log.Info("用户:"&username&"华为订单全字段报表下载完成，路径为："&filePath)
+			Return filePath
+		Else
+			Delay(2000)
+		End If
+	Loop
+	Throw "用户:"&username&"华为订单全字段报表下载超时"
+	
+	
+End Function
+
+
+Function 等待搜索结果页面加载完成()
+	
+	//等待导出页中结果表格第一个单元格元素出现
+	#icon("@res:89bea2rd-36fi-tqoq-mktk-rtkn4p2a7vb4.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":"2","tableCol":"1"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":2000,"iDelayBefore":200})
+	//点击单页数量选择下拉框
+	#icon("@res:pghgilvm-om21-igoo-qb24-q3oh8podhnm6.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"Dropdown_*","idx":2}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	//将单页显示条数设置为15
+	#icon("@res:72pbskq9-3hbi-tvpc-klti-906j8onnpcd8.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"LI","parentid":"Dropdown_*_sel_*","idx":2}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	
+End Function
+
+
+Function 获取最新华为订单全字段报表(url, userList, pwdList, saveDir, resultDir)
+	/*
+    url:华为网址
+    userList:账号列表
+    pwdList:密码列表
+    saveDir:文件保存目录
+    resultDir: 各汇总表所在目录
+    */
+	listlength = Len(userList)
+	For i = 0 To listlength-1 Step 1 
+		user = userList[i]
+		pwd = pwdList[i]
+		//获取“华为订单全字段报表”汇总表路径，及本次需要查询的时间范围、文件最新标志;返回（华为订单全字段报表汇总表路径，开始日期，结束日期，文件最新标志）
+		result = func.getQryTimeRange(resultDir, "订单全字段报表", "%Y-%m-%d", user) 
+		
+		If result[3]
+			allFieldFilePath = result[0]
+			Log.Info("用户："&user&"华为订单全字段报表已是最新，路径为："&allFieldFilePath)
+		Else
+			Log.Info("用户："&user&"华为订单全字段报表查询日期范围为："&result[1]&"~"&result[2])
+			downloadPath =华为订单全字段报表下载(url, user, pwd, result[1], result[2], saveDir)
+			// 将下载的“华为订单全字段报表”合并到“华为订单全字段报表汇总”表中，返回新的“华为订单全字段报表汇总”表路径
+			allFieldFilePath = export.updateAllFieldFile(downloadPath, result[0], result[2])
+		End If
+		
+	Next
+	//防止存在账号之前下载表格但现在账号不再使用，其下载的表格仍参与计算，因此直接获取汇总表目录下的所有"华为订单全字段报表"
+	fileList = func.getSameFormatFile(resultDir, "订单全字段报表")
+	Return fileList
+	
+End Function
+
+url = "https://uniportal.huawei.com/uniportal/?redirect=https%3A%2F%2Fpartner.huawei.com%2Feplus%2F%23%2Fcn%2Fgroup%2Fcn-cp"
+userList = ["szshbj","13544480167","hfszsm"]
+pwdList =  ["shenma22@@","Ctkj@123456","shenmaQ2@#"]
+saveDir = "C:\\Users\\11598\\Desktop"
+resultDir="D:\\Uibot项目文件\\汇总表"
+获取最新华为订单全字段报表(url, userList, pwdList, saveDir, resultDir)
+
+
