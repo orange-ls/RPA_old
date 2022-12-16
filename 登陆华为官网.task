@@ -1,0 +1,73 @@
+/*
+作者：刁吕涛
+创建时间：2022年06月22日
+下单费用流程
+*/
+Dim iRet = ""
+Dim logUser = ""
+Dim hWeb = ""
+
+Function 登陆华为官网(url, username, pwd)
+	/*
+    url：华为网址
+    username：登陆用户名
+    pwd ：登陆密码
+    */
+	
+	logFlag = False
+	App.Kill("chrome.exe")
+	
+	// 打开华为网址
+	hWeb = WebBrowser.Create("chrome",url,30000,{"bContinueOnError":False,"iDelayAfter":2000,"iDelayBefore":200,"sBrowserPath":"","sStartArgs":""})
+	//窗口最大化
+	#icon("@res:70ggnfst-s8oi-0c5d-3vn0-6qgo76187gl8.png")
+	Window.SetActive({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*- Google Chrome","app":"chrome"}]})
+	#icon("@res:70ggnfst-s8oi-0c5d-3vn0-6qgo76187gl8.png")
+	Window.Show({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*- Google Chrome","app":"chrome"}]},"max")
+	
+	//获取title，如果title为epartner_portal说明为登陆状态
+	title = WebBrowser.GetTitle(hWeb,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	If title = "epartner_portal"
+		//获取登陆用户名
+		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
+		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
+		logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+		logUser = Trim(logUser,None)
+		If logUser = username
+			logFlag = True
+			Log.Info("账号："&username&"已登录,跳过登陆")
+		Else
+			Log.Info("账号："&logUser&"已登录同需要登陆账号："&username&"不同，退出登录后重新打开网页")
+			//已登陆账号不是需要登陆的账号，退出登陆
+			#icon("@res:6cf1r30o-0qur-5h8c-209v-257otfb21dvc.png")
+			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","aaname":"退出"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":6000,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+			//重新加载华为网页
+			#icon("@res:default.png")
+			iRet = WebBrowser.GoURL(hWeb,url,False,{},30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+		End If
+	End If
+	
+	If Not logFlag:
+		//等待账号输入元素出现
+		#icon("@res:4qdooh6h-htv0-2hkl-br7f-ro8h1q2anj9j.png")
+		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"uid"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200})
+		//输入账号密码
+		通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"uid"}]}, username)
+		#icon("@res:5kqjtqku-r1fo-ott8-rl7e-r24ti906k3qv.png")
+		Keyboard.InputText({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"password"}]},pwd,True,20,10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":500,"bSetForeground":True,"sSimulate":"message","bValidate":True,"bClickBeforeInput":False})
+		//点击登陆
+		#icon("@res:mggcahvd-7fmu-v5vf-hrn6-tfbprm3o6uo4.png")
+		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","type":"button"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	End If
+	
+	//等待账号名称元素出现
+	//#icon("@res:j7fd9hfu-8u39-uh4n-i0ga-beivgo1um2ld.png")
+	//UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"FONT","parentid":"$1600540765986","isleaf":"1"}]},"show",15000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	#icon("@res:2f901mtv-6psf-smni-jb5q-7i8uve91a5oe.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"P","isleaf":"1"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	Log.Info("用户："&username&"华为网站登录成功")
+	
+End Function
+
+
