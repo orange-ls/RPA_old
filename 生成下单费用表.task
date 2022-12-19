@@ -41,7 +41,6 @@ Try
 	For Each companyName,orderList In initOrderDict["需要下载的合同号Dict"]
 		logUser = companyNameToUser[companyName]
 		logPwd = userPwdDict[logUser]
-		dataNum = Len(orderList)
 		For Each orderNum In orderList
 			// incentiveFlag：当前下载的“下单合同号”的“使用激励金额”是否有记录
 			incentiveFlag = func.jud_in(orderNum, g_incentiveDict)
