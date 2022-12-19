@@ -37,11 +37,12 @@ Try
 	
 	//按照不同的账号，分别下载该账号下的“里程碑付款&调整台帐”表
 	orderFileDict = {} //保存各“下单合同号”下载的文件路径
-    recordDict = {"城投": , "合神": "hfszsm", "北神": "szshbj"}
+    recordDict = {"城投": 0, "合神": 0, "北神": 0}
     TracePrint recordDict["sda"]
 	For Each companyName,orderList In initOrderDict["需要下载的合同号Dict"]
 		logUser = companyNameToUser[companyName]
 		logPwd = userPwdDict[logUser]
+        dataNum = Len(orderList)
 		For Each orderNum In orderList
 			// incentiveFlag：当前下载的“下单合同号”的“使用激励金额”是否有记录
 			incentiveFlag = func.jud_in(orderNum, g_incentiveDict)
