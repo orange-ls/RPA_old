@@ -21,8 +21,19 @@ End If
 
 
 
+
+
+
 Try
-    TracePrint a&{"a":"b"}
+    Try 3
+	#icon("@res:6cf1r30o-0qur-5h8c-209v-257otfb21dvc.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","aaname":"退出"}]},"left","click",1000,{"bContinueOnError":False,"iDelayAfter":100,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+    Catch ex
+        Throw ex
+    End Try
 Catch e
     Throw e
 End Try
+
+
+
