@@ -37,12 +37,11 @@ Try
 	
 	//按照不同的账号，分别下载该账号下的“里程碑付款&调整台帐”表
 	orderFileDict = {} //保存各“下单合同号”下载的文件路径
-    recordDict = {"城投": 0, "合神": 0, "北神": 0}
-    TracePrint recordDict["sda"]
+	recordDict = {"城投": 0, "合神": 0, "北神": 0} //记录各账号下数据的下载进度
 	For Each companyName,orderList In initOrderDict["需要下载的合同号Dict"]
 		logUser = companyNameToUser[companyName]
 		logPwd = userPwdDict[logUser]
-        dataNum = Len(orderList)
+		dataNum = Len(orderList)
 		For Each orderNum In orderList
 			// incentiveFlag：当前下载的“下单合同号”的“使用激励金额”是否有记录
 			incentiveFlag = func.jud_in(orderNum, g_incentiveDict)
@@ -52,12 +51,10 @@ Try
 			If downloadResult[1]: 
 				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: downloadResult[1]})
 			End If
-            recordDict[companyName] = recordDict[companyName] + 1
-
-            initOrderDict = {"需要下载的合同号Dict":{"城投": [1,2], "合神":[3,45,5], "北神": [1,2,3,4]}}
-            recordDict = {"城投": 1, "合神": 2, "北神": 3}
-            showStr = "当前下载进度：\n城投："&recordDict["城投"]&" / "&Len(initOrderDict["需要下载的合同号Dict"]["城投"])&"\n合神："&recordDict["合神"]&" / "&Len(initOrderDict["需要下载的合同号Dict"]["合神"])&"\n北神："&recordDict["北神"]&" / "&Len(initOrderDict["需要下载的合同号Dict"]["北神"])
-            TracePrint showStr
+            // 显示当前的下载进度
+			recordDict[companyName] = recordDict[companyName] + 1
+			showStr = "当前下载进度：\n城投："&recordDict["城投"]&" / "&Len(initOrderDict["需要下载的合同号Dict"]["城投"])&"\n合神："&recordDict["合神"]&" / "&Len(initOrderDict["需要下载的合同号Dict"]["合神"])&"\n北神："&recordDict["北神"]&" / "&Len(initOrderDict["需要下载的合同号Dict"]["北神"])
+			Dialog.Notify(showStr, "UiBot", 1)
 		Next
 	Next
 	//将保存{下单合同号：使用激励金额}保存到“激励金额记录表”中
