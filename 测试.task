@@ -1,0 +1,28 @@
+Import func
+Dim sText = ""
+Dim objJSON = ""
+Dim dictRet = ""
+Dim mylist = ""
+Dim strJSON = ""
+Dim objCredential = ""
+Dim iPID = ""
+Dim hWeb = ""
+Dim objRect = ""
+Dim arrayRet = ""
+Dim sRet = ""
+Dim bRet = ""
+
+a={}
+If a={}
+	TracePrint 111
+Else
+	TracePrint 222
+End If
+
+
+
+Try
+    TracePrint a&{"a":"b"}
+Catch e
+    Throw e
+End Try
