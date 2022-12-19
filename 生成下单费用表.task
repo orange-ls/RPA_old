@@ -52,6 +52,8 @@ Try
 			If downloadResult[1]: 
 				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: downloadResult[1]})
 			End If
+            recordDict[companyName] = recordDict[companyName] + 1
+            showStr = "当前下载进度：\n城投："&recordDict["城投"]&"/"&dataNum&"\n合神："&recordDict["城投"]&
 		Next
 	Next
 	//将保存{下单合同号：使用激励金额}保存到“激励金额记录表”中
