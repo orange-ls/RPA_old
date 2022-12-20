@@ -1,7 +1,7 @@
 /*
 作者：刁吕涛
 创建时间：2022年08月30日
-销售明细流程
+下单费用流程
 */
 Dim exportTime = ""
 Dim temp = ""
@@ -232,7 +232,7 @@ Function 获取最新华为订单全字段报表(url, userList, pwdList, saveDir
 			Log.Info("用户："&user&"华为订单全字段报表查询日期范围为："&result[1]&"~"&result[2])
 			downloadPath =华为订单全字段报表下载(url, user, pwd, result[1], result[2], saveDir)
 			// 将下载的“华为订单全字段报表”合并到“华为订单全字段报表汇总”表中，返回新的“华为订单全字段报表汇总”表路径
-			allFieldFilePath = export.updateAllFieldFile(downloadPath, result[0], result[2])
+			allFieldFilePath = func.updateAllFieldFile(downloadPath, result[0], result[2])
 		End If
 		
 	Next
