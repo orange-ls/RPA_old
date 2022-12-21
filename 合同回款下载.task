@@ -214,12 +214,17 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 	
 	//未获取该合同号的激励金额时执行
 	If Not incentiveFlag
-		//在“合同回款查询”页面中获取“使用激励金额”
-		#icon("@res:4r5m3eeb-6u9q-momg-98ij-85mv6vikj8ls.png")
-		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","aaname":qryOrderNum}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		//获取“使用激励金额”文本
-		#icon("@res:2qlvt52g-bka3-j9b4-6euv-clonff3geb7s.png")
-		amount = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"11"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+        Try
+            //在“合同回款查询”页面中获取“使用激励金额”
+            #icon("@res:4r5m3eeb-6u9q-momg-98ij-85mv6vikj8ls.png")
+            UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","aaname":qryOrderNum}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            //获取“使用激励金额”文本
+            #icon("@res:2qlvt52g-bka3-j9b4-6euv-clonff3geb7s.png")
+            amount = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"11"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+        Catch e
+            Log.Info("获取合同号激励金额异常，判断是否无合同回款信息汇总")
+        End Try
+		
 	End If	
 	
 	Return [filePath, amount]
