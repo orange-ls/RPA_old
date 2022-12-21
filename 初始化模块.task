@@ -31,6 +31,7 @@ Try
 		g_dictGlobal = func.getConfigDict(g_configPath)
 		g_dictGlobal["文件下载路径"] = func.getSaveDir(g_dictGlobal["文件下载路径"])
 		g_dictGlobal["结果保存路径"] = func.getSaveDir(g_dictGlobal["结果保存路径"])
+        g_dictGlobal["结果保存路径"]
 		//创建文件夹
 		For Each path In [g_dictGlobal["文件下载路径"], g_dictGlobal["结果保存路径"]]
 			bRet = File.FolderExists(path)
