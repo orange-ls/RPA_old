@@ -35,7 +35,7 @@ Try
 Catch e
 	Throw e["Message"]
 End Try
-#icon("@res:pfmqpco0-2n6n-f17c-cbp3-r52s9bod6cid.png")
+#icon("@res:g23g2e2n-af14-5qsd-g406-ukutm19gqcbd.png")
 UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"tabManyPaymentAccount1","isleaf":"1"}]},"hide",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 #icon("@res:default.png")
 sRet = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"tabManyPaymentAccount1","isleaf":"1"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
