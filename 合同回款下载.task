@@ -223,12 +223,13 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			amount = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"11"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		Catch e
 			Log.Info("获取合同号"&qryOrderNum&"激励金额异常，判断是否无合同回款信息汇总")
+            // 判断是否存在“无记录”的元素
 			#icon("@res:o429pk19-5h4m-i2vl-1rpn-mb57cfb0r4dj.png")
 			bRet = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"grddemandPaymentInfo_viewport","aaname":"无符合查询条件的记录。"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			If bRet
 				amount = "0"
 			Else
-				Throw ""
+				Throw "获取激励金额异常且未检测到无记录标识"
 			End If
 		End Try
 		
