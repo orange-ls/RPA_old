@@ -13,7 +13,7 @@ Dim sRet = ""
 Dim bRet = ""
 
 a={}
-If a={}
+If None
 	TracePrint 111
 Else
 	TracePrint 222
@@ -25,16 +25,20 @@ End If
 
 
 Try
-    Try
-	#icon("@res:6cf1r30o-0qur-5h8c-209v-257otfb21dvc.png")
-	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","aaname":"退出"}]},"left","click",1000,{"bContinueOnError":False,"iDelayAfter":100,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-    Catch ex
-        TracePrint ex["Message"]
-        Throw ex
-    End Try
+	Try
+		#icon("@res:6cf1r30o-0qur-5h8c-209v-257otfb21dvc.png")
+		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","aaname":"退出"}]},"left","click",1000,{"bContinueOnError":False,"iDelayAfter":100,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	Catch ex
+		TracePrint ex["Message"]
+		Throw ex
+	End Try
 Catch e
-    Throw e["Message"]
+	Throw e["Message"]
 End Try
+#icon("@res:pfmqpco0-2n6n-f17c-cbp3-r52s9bod6cid.png")
+UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"tabManyPaymentAccount1","isleaf":"1"}]},"hide",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+#icon("@res:default.png")
+sRet = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"tabManyPaymentAccount1","isleaf":"1"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 
 
 
