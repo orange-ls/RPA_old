@@ -25,23 +25,25 @@ Function 登陆华为官网(url, username, pwd)
 	#icon("@res:70ggnfst-s8oi-0c5d-3vn0-6qgo76187gl8.png")
 	Window.Show({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*- Google Chrome","app":"chrome"}]},"max")
 	
-	//等待页面加载，判断是否登陆，超时时间为60s
+	//等待页面加载，判断是否登陆，超时时间为90s
 	startTime = Time.Now()  //开始时间
 	Do While True
 		timeDiff = Time.DateDiff("s",startTime,Time.Now())
-		If timeDiff < 60
-            // 判断登陆的用户名元素是否存在
+		If timeDiff < 90
+			// 判断登陆的用户名元素是否存在
 			#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
 			bRet1 = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-            If bRet1
+			TracePrint bRet1
+			If bRet1
 				Log.Info("检测到已登录标识")
-                logFlag = True
+				logFlag = True
 				Break
 			End If
-            // 判断登陆的用户名输入元素是否存在
+			// 判断登陆的用户名输入元素是否存在
 			#icon("@res:4qdooh6h-htv0-2hkl-br7f-ro8h1q2anj9j.png")
 			bRet2 = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"uid"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-			If bRet1
+			TracePrint bRet2
+			If bRet2
 				Log.Info("检测到未登录标识")
 				Break
 			End If
@@ -49,8 +51,8 @@ Function 登陆华为官网(url, username, pwd)
 			Throw "判断账号是否已登录标识超时"
 		End If
 	Loop
-
-    // 已登录的情况需要判断登陆的用户是否为需要登陆的用户，否则需要退出登陆
+	
+	// 已登录的情况需要判断登陆的用户是否为需要登陆的用户，否则需要退出登陆
 	If logFlag
 		//获取登陆用户名
 		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
@@ -68,7 +70,7 @@ Function 登陆华为官网(url, username, pwd)
 			//重新加载华为网页
 			#icon("@res:default.png")
 			iRet = WebBrowser.GoURL(hWeb,url,False,{},30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-            logFlag = False
+			logFlag = False
 		End If
 	End If
 	
@@ -86,8 +88,8 @@ Function 登陆华为官网(url, username, pwd)
 	End If
 	
 	//等待账号名称元素出现
-	//#icon("@res:j7fd9hfu-8u39-uh4n-i0ga-beivgo1um2ld.png")
-	//UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"FONT","parentid":"$1600540765986","isleaf":"1"}]},"show",15000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	// #icon("@res:j7fd9hfu-8u39-uh4n-i0ga-beivgo1um2ld.png")
+	// UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"FONT","parentid":"$1600540765986","isleaf":"1"}]},"show",15000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 	#icon("@res:2f901mtv-6psf-smni-jb5q-7i8uve91a5oe.png")
 	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"P","isleaf":"1"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 	Log.Info("用户："&username&"华为网站登录成功")
