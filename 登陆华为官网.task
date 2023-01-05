@@ -14,7 +14,7 @@ Function 登陆华为官网(url, username, pwd)
     pwd ：登陆密码
     */
 	
-	logFlag = ""
+	logFlag = False
 	App.Kill("chrome.exe")
 	
 	// 打开华为网址
@@ -33,21 +33,21 @@ Function 登陆华为官网(url, username, pwd)
 			#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
 			bRet1 = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
             If bRet1
-				Log.Info("账号："&username&"已登录,跳过登陆")
+				Log.Info("检测到账号："&username&"已登录标识")
+                logFlag = True
 				Break
 			End If
 			#icon("@res:4qdooh6h-htv0-2hkl-br7f-ro8h1q2anj9j.png")
 			bRet2 = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","id":"uid"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			If bRet1
-				Log.Info("华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载完成，路径为："&filePath)
+				Log.Info("检测到账号："&username&"未登录标识")
 				Break
 			End If
 		Else
-			Throw "华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载超时"
+			Throw "判断账号是否已登录标识超时"
 		End If
 	Loop
-	//获取title，如果title为epartner_portal说明为登陆状态
-	title = WebBrowser.GetTitle(hWeb,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+
 	If title = "epartner_portal"
 		//获取登陆用户名
 		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
