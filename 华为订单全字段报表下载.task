@@ -55,6 +55,8 @@ Function 华为订单全字段报表下载(url, username, pwd, startDate, endDat
 	//等待"导出"按钮出现
 	#icon("@res:tkfqd92b-o5oe-kd9c-4nh1-tjmam84p080c.png")
 	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"BUTTON","aaname":"*导出*"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200})
+	#icon("@res:n738k7tu-6amv-3c68-b4n6-j71g3ge6njbr.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eorder/epartner/web#/order/channel/re*"},{"tag":"DIV","css-selector":"body>div>div.com-load"}]},"hide",30000,{"bContinueOnError":False,"iDelayAfter":2000,"iDelayBefore":200})
 	
 	//输入"订单激活开始日期"和"订单激活结束日期"
 	//sRet = WebBrowser.RunJS(hWeb,'''function(){var iframeEle = document.querySelector("iframe.epartner-iframe").contentWindow.document;var inputEles = iframeEle.querySelectorAll("#customDateInput > input");inputEles[0].removeAttribute("readonly");inputEles[1].removeAttribute("readonly");return true}''',True,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
