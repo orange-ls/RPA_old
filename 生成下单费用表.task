@@ -30,7 +30,7 @@ Try
 	//下载获取最新的华为全字段报表路径
 	allFieldfpList = 华为订单全字段报表下载.获取最新华为订单全字段报表(g_dictGlobal["华为网址"], g_dictGlobal["华为网站账号"], g_dictGlobal["华为网站密码"], g_dictGlobal["文件下载路径"], g_dictGlobal["各汇总表路径"])
 	
-    //预处理毛利分析结果表，补充“备注”列
+    //预处理毛利分析结果表，补充“备注”列，
     g_analyzePath = fun.initAnalyzeNoteText(orderFileList, g_analyzePath)
 
 	//读取下单费用表和毛利分析结果表，返回字典{"下单df": 下单数据df, "已处理df": 已处理的下单数据df, "剩余付款df": 未处理的付款数据df, "最新付款时间dict":最新付款时间dict}
