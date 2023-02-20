@@ -5,7 +5,6 @@
 */
 
 Dim bRet = ""
-g_configPath="E:\\Uibot项目文件\\总配置.xlsx"
 
 //屏幕提示机器人运行状态
 If objWindow <> ""
@@ -80,7 +79,7 @@ Try
 		Log.Info("已选择毛利分析表："&g_analyzePath)
 	End If
 	
-	//读取激励记录表，返回字典{下单合同号：使用激励金额}
+	//读取激励记录表，返回字典{下单合同号：[使用激励金额,是否使用授信]}
 	g_incentiveDict = func.readIncentiveRecord(g_dictGlobal["激励金额记录文件路径"])
 	
 Catch ex
