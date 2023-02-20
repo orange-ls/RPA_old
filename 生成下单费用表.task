@@ -27,8 +27,8 @@ Try
 	//下载获取最新的华为订单表路径
 	fieldList = ["华为订单号", "订单版本", "运输方式"]
 	orderFileList = 华为订单表下载.获取最新华为订单表(g_dictGlobal["华为网址"], g_dictGlobal["华为网站账号"], g_dictGlobal["华为网站密码"], g_dictGlobal["文件下载路径"], fieldList)
-	//下载获取最新的华为全字段报表路径
-	allFieldfpList = 华为订单全字段报表下载.获取最新华为订单全字段报表(g_dictGlobal["华为网址"], g_dictGlobal["华为网站账号"], g_dictGlobal["华为网站密码"], g_dictGlobal["文件下载路径"], g_dictGlobal["各汇总表路径"])
+	// //下载获取最新的华为全字段报表路径
+	// allFieldfpList = 华为订单全字段报表下载.获取最新华为订单全字段报表(g_dictGlobal["华为网址"], g_dictGlobal["华为网站账号"], g_dictGlobal["华为网站密码"], g_dictGlobal["文件下载路径"], g_dictGlobal["各汇总表路径"])
 	
 	//预处理毛利分析结果表，补充“备注”列，返回处理后的文件路径
 	g_analyzePath = func.initAnalyzeNoteText(orderFileList, g_analyzePath)
