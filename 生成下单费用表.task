@@ -45,13 +45,13 @@ Try
 		logUser = companyNameToUser[companyName]
 		logPwd = userPwdDict[logUser]
 		For Each orderNum In orderList
-			// incentiveFlag：当前下载的“下单合同号”的“使用激励金额”是否有记录
+			// incentiveFlag：当前下载的“下单合同号”的“使用激励金额/是否使用激励”是否有记录
 			incentiveFlag = func.jud_in(orderNum, g_incentiveDict)
 			downloadResult = 合同回款下载.里程碑付款_调整台帐下载(g_dictGlobal["华为网址"], logUser, logPwd, orderNum, g_dictGlobal["里程碑付款&调整台帐表下载路径"], incentiveFlag)
 			orderFileDict[orderNum] = downloadResult[0]
 			//downloadResult[1]为返回的“使用激励金额”，若有值，就更新“使用激励金额”字典g_incentiveDict
-			If downloadResult[1] <> "": 
-				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: downloadResult[1]})
+			If downloadResult[1] <> "" Or downloadResult[2] <> ""
+				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: [downloadResult[1], downloadResult[2]]})
 			End If
 			// 显示当前的下载进度
 			recordDict[companyName] = recordDict[companyName] + 1
