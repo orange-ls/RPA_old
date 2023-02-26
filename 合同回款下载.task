@@ -25,6 +25,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 	
 	isDownload = False //文件下载标识
 	amount = None   //默认获取到的"使用激励金额"为None
+	isCredit = None   //默认获取到的"是否使用授信"为None
 	
 	Log.Info("用户:"&username&"开始下载"&qryOrderNum&"里程碑付款&调整台帐表")
 	
@@ -214,7 +215,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		Loop
 	End If
 	
-	//未获取该合同号的激励金额时执行
+	//未获取该合同号的 激励金额/是否使用授信 时执行
 	If Not incentiveFlag
 		Try
 			//在“合同回款查询”页面中获取“使用激励金额”
