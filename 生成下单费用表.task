@@ -35,8 +35,6 @@ Try
 	
 	//读取下单费用表和毛利分析结果表，返回字典{"下单df": 下单数据df, "已处理df": 已处理的下单数据df, "剩余付款df": 未处理的付款数据df, "最新付款时间dict":最新付款时间dict}
 	initResultDict = func.getOriginOrderData(g_analyzePath, g_orderCostPath)
-	//初始化需要下载“里程碑付款&调整台帐”表的合同号（授信除外），返回字典{"华为原厂df": 华为原厂df, "需要下载的合同号Dict": {公司：[下单合同号]}}, "授信字典": {下单合同号: [订单激活时间, 订单变更前金额]}}
-	// initOrderDict = func.initDownLoadOrder(initResultDict["下单df"])
     //初始化需要下载“里程碑付款&调整台帐”表的合同号，返回字典{"华为原厂df": 华为原厂df, "需要下载的合同号Dict": {公司：[下单合同号]}}
 	initOrderDict = func.initDownLoadOrder(initResultDict["下单df"])
 
@@ -72,11 +70,11 @@ Try
 	PrintToScreen.CleanText(objWindow)
 	PrintToScreen.DrawText(objWindow,"机器人处理数据中，请勿操作电脑",28,[255,0,0])
 
-        //校验授信付款外挂表数据完整性，若存在授信的合同但外挂表中无对应数据，将这些数据保存并抛出异常,返回：华为原厂授信数据df
+    //校验授信付款外挂表数据完整性，若存在授信的合同但外挂表中无对应数据，将这些数据保存并抛出异常,返回：华为原厂授信数据df
 	df_credit = func.validCreditData(g_incentiveDict, g_dictGlobal["授信付款外挂表"], g_dictGlobal["结果保存路径"])
 	
 	//处理"华为原厂"数据，返回列表[华为原厂df结果数据，华为原厂数据的下单合同号列表]
-	ycResultDict = func.calDataStep_YC(initOrderDict["华为原厂df"], initOrderDict["授信字典"], g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList, initResultDict["最新付款时间dict"])
+	ycResultDict = func.calDataStep_YC(initOrderDict["华为原厂df"], df_credit, g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList, initResultDict["最新付款时间dict"])
 	df_originFinal = ycResultDict[0]
 	orderList_YC = ycResultDict[1]
 	
