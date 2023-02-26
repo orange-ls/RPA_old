@@ -43,6 +43,9 @@ Try
 	recordDict = {"城投": 0, "合神": 0, "北神": 0} //记录各账号下数据的下载进度
 	For Each companyName,orderList In initOrderDict["需要下载的合同号Dict"]
 		logUser = companyNameToUser[companyName]
+		If logUser="13544480167"
+			Continue
+		End If
 		logPwd = userPwdDict[logUser]
 		For Each orderNum In orderList
 			// incentiveFlag：当前下载的“下单合同号”的“使用激励金额/是否使用激励”是否有记录
