@@ -71,7 +71,7 @@ Try
 	PrintToScreen.DrawText(objWindow,"机器人处理数据中，请勿操作电脑",28,[255,0,0])
 	
 	//校验授信付款外挂表数据完整性，若存在授信的合同但外挂表中无对应数据，将这些数据保存并抛出异常,返回：华为原厂授信数据df
-	df_credit = func.validCreditData(g_incentiveDict, g_dictGlobal["授信付款外挂表"], g_dictGlobal["结果保存路径"])
+	df_credit = func.validCreditData(g_incentiveDict, g_dictGlobal["授信付款外挂表路径"], g_dictGlobal["结果保存路径"])
 	
 	//处理"华为原厂"数据，返回列表[华为原厂df结果数据，华为原厂数据的下单合同号列表]
 	ycResultDict = func.calDataStep_YC(initOrderDict["华为原厂df"], df_credit, g_incentiveDict, orderFileDict, initResultDict["剩余付款df"], orderFileList, initResultDict["最新付款时间dict"])
