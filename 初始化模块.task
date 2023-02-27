@@ -76,9 +76,9 @@ Try
 			Log.Info("选择的毛利分析表路径为："&g_analyzePath)
 		End If
 	Else
+		g_analyzePath = Replace(g_analyzePath,"_预处理备注.xlsx",".xlsx",False)
 		Log.Info("已选择毛利分析表："&g_analyzePath)
 	End If
-	
 	//读取激励记录表，返回字典{下单合同号：[使用激励金额,是否使用授信]}
 	g_incentiveDict = func.readIncentiveRecord(g_dictGlobal["激励金额记录文件路径"])
 	
