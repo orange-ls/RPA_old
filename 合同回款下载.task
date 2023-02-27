@@ -38,7 +38,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		isDownload = True
 	End If
 	
-	If isDownload And incentiveFlag And isCredit
+	If isDownload And incentiveFlag
 		Log.Info("合同号为"&qryOrderNum&"的表及激励金额、是否使用授信均已获取")
 		Return [filePath, amount, isCredit]
 	End If
@@ -216,7 +216,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 	End If
 	
 	//未获取该合同号的 激励金额/是否使用授信 时执行
-	If Not incentiveFlag Or Not isCredit
+	If Not incentiveFlag
 		Try
 			//在“合同回款查询”页面中获取“使用激励金额”
 			#icon("@res:4r5m3eeb-6u9q-momg-98ij-85mv6vikj8ls.png")
@@ -227,6 +227,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			//获取“是否使用授信”
 			#icon("@res:7h8gubu5-6b99-tnlg-fvoi-i4hbfc4pu9vd.png")
 			isCredit = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"12"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            Log.Info("获取合同号"&qryOrderNum&"激励金额为：")
 		Catch e
 			Log.Info("获取合同号"&qryOrderNum&"激励金额/是否使用授信异常，判断是否无合同回款信息汇总")
 			// 判断是否存在“无记录”的元素
