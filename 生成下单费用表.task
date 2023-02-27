@@ -50,7 +50,7 @@ Try
 			downloadResult = 合同回款下载.里程碑付款_调整台帐下载(g_dictGlobal["华为网址"], logUser, logPwd, orderNum, g_dictGlobal["里程碑付款&调整台帐表下载路径"], incentiveFlag)
 			orderFileDict[orderNum] = downloadResult[0]
 			//downloadResult[1]为返回的“使用激励金额”，若不为None，就更新“使用激励金额”字典g_incentiveDict
-			If downloadResult[1] <> "" Or downloadResult[2] <> ""
+			If downloadResult[1]: 
 				g_incentiveDict= func.updateDict(g_incentiveDict, {orderNum: [downloadResult[1], downloadResult[2]]})
 			End If
 			// 显示当前的下载进度
