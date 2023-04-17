@@ -164,9 +164,12 @@ Function 华为订单全字段报表下载(url, username, pwd, startDate, endDat
 	//点击导出项的文件名
 	#icon("@res:pkvf8n8k-tcdr-smme-fmt6-aii8f7afn0hp.png")
 	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","idx":1},{"tag":"TD","tableRow":row,"tableCol":"4"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"message","bMoveSmoothly":False})
-	//等待跳转页面的“下载”按钮出现
-	#icon("@res:tg4aclo7-ngm2-f14j-1u8b-md69kvg92n04.png")
-	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"BUTTON","idx":1,"aaname":"*下*载*"}]},"show",20000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	//等待跳转页面的“语言设置”元素，并设置为中文
+	#icon("@res:699fai6q-6mb2-fp9j-k0nq-af7cp5p5bepp.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"中文"}]},"show",20000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	#icon("@res:699fai6q-6mb2-fp9j-k0nq-af7cp5p5bepp.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"中文"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	//点击“下载”
 	#icon("@res:2ou6sebb-fifk-46ti-s7vo-4ls90b31gur1.png")
 	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"BUTTON","idx":1,"aaname":"*下*载*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 	
