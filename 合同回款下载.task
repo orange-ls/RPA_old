@@ -305,7 +305,7 @@ saveDir = "C:\\Users\\11598\\Desktop"
 res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y03502206060Y", saveDir,False)
 Log.Info(res)
 objExcelWorkBook = Excel.OpenExcel("C:\\Users\\11598\\Desktop\\hfszsm_1Y02502111040F_里程碑付款&调整台帐表.xlsx",False,"Excel","","")
-objRet = Excel.ReadCell(objExcelWorkBook,"Sheet1","A5")
+objRet = Excel.ReadCell(objExcelWorkBook,"Sheet1","B5")
 
 
 
