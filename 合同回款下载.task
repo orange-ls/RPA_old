@@ -26,7 +26,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
     saveDir:文件保存目录
     incentiveFlag:是否获取激励金额的标识
     */
-	Try 3
+	
         isDownload = False //文件下载标识
         amount = None   //默认获取到的"使用激励金额"为None
         isCredit = None   //默认获取到的"是否使用授信"为None
@@ -47,6 +47,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
             Return [filePath, amount, isCredit]
         End If
         
+        Try 3
         //判断是否登陆
         #icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
         isOpen = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
@@ -267,9 +268,10 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
         End If	
         
         Return [filePath, Replace(amount,",","",False), Replace(isCredit," ","",False)]
-    Catch e
-        Throw e
+    Catch ex
+        Throw ex
     Else
+        
     End Try
 End Function
 
@@ -298,16 +300,12 @@ Function 等待加载完成()
 	Loop
 End Function
 
-// url = "https://uniportal.huawei.com/uniportal/?redirect=https%3A%2F%2Fpartner.huawei.com%2Feplus%2F%23%2Fcn%2Fgroup%2Fcn-cp"
-// username = "hfszsm"
-// pwd = "shenmaQ2@@"
-// saveDir = "C:\\Users\\11598\\Desktop"
-// res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y055021110037", saveDir)
-// Log.Info(res)
-hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-bRet = WebBrowser.SwitchTab(hWeb,"title","C11FS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
-TracePrint(bRet)
-#icon("@res:default.png")
-sRet = UiElement.GetValue({},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+url = "https://uniportal.huawei.com/uniportal/?redirect=https%3A%2F%2Fpartner.huawei.com%2Feplus%2F%23%2Fcn%2Fgroup%2Fcn-cp"
+username = "hfszsm"
+pwd = "shenma23@"
+saveDir = "C:\\Users\\11598\\Desktop"
+res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y055021110037", saveDir)
+Log.Info(res)
+
 
 
