@@ -121,20 +121,20 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 	//点击搜索
 	#icon("@res:e6j4pevn-pjae-3pvg-n3j2-av8m7h5sqeie.png")
 	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-	#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
-	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog2"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	//
-	
 	
 	//里程碑付款&调整台帐表未下载时执行
 	If Not isDownload
 		//点击导出
 		#icon("@res:348kv934-1aoc-5jat-4nk9-esh3pmlq2bpm.png")
 		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"INPUT","id":"btnExcelExport"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+		//等待导出弹窗元素出现
+		#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
+		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		
 		isJump = WebBrowser.SwitchTab(hWeb,"title","CFS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
 		If isJump
-			
+			#icon("@res:default.png")
+			Mouse.Action({},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 		Else
 			
 		End If
