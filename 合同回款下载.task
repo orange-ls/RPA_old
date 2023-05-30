@@ -140,9 +140,16 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		Else
 			#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-            
+			#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
+			UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			等待加载完成()
+			#icon("@res:f8c64mlm-gu5l-moak-psn0-35adpid085e6.png")
+			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+			#icon("@res:j4c0r8hl-nctv-6o15-s7fq-sprcjpea0jeh.png")
+			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"dropdown_0_ddl","aaname":"cfs_ptn_contract_payment_back"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+			
 		End If
+		
 		
 		//等待导出页面的“序号1”元素出现
 		#icon("@res:f78v4nt5-qun7-inva-1eke-p3mjtuotq11b.png")
