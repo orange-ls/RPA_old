@@ -26,245 +26,251 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
     saveDir:文件保存目录
     incentiveFlag:是否获取激励金额的标识
     */
-	
-	isDownload = False //文件下载标识
-	amount = None   //默认获取到的"使用激励金额"为None
-	isCredit = None   //默认获取到的"是否使用授信"为None
-	
-	Log.Info("用户:"&username&"开始下载"&qryOrderNum&"里程碑付款&调整台帐表")
-	
-	//文件名："登陆账号"_"订单号"_里程碑付款&调整台帐表.xlsx
-	filename = username&"_"&qryOrderNum&"_"&"里程碑付款&调整台帐表.xlsx"
-	filePath = saveDir & "\\" & filename
-	//判断文件是否已下载
-	If File.FileExists(filePath)
-		Log.Info("合同号为"&qryOrderNum&"的里程碑付款&调整台帐表已下载，路径为："&filePath)
-		isDownload = True
-	End If
-	
-	If isDownload And incentiveFlag
-		Log.Info("合同号为"&qryOrderNum&"的表及激励金额、是否使用授信均已获取")
-		Return [filePath, amount, isCredit]
-	End If
-	
-	//判断是否登陆
-	#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
-	isOpen = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	//未登录的情况需要重新登陆
-	If Not isOpen
-		登陆华为官网.登陆华为官网(url, username, pwd)
-		//绑定浏览器
-		hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	Else
-		//绑定浏览器
-		hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	End If
-	
-	//判断是否是需要登陆的用户
-	#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
-	logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
-	logUser = Trim(logUser,None)
-	//已登录用户和需要登录的用户不同，需要重新登陆
-	If InStr(logUser,username,1,False) = 0
-		登陆华为官网.登陆华为官网(url, username, pwd)
-		//绑定浏览器
-		hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	End If
-	
-	//判断是否在"合同回款查询"页面
-	#icon("@res:i69vakcv-at4l-7itg-jgqt-ps6tqiqdhteo.png")
-	isTruePage = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	//不在"合同回款查询"页面，需要进入该页面并设置好相关配置
-	If Not isTruePage
-		//后台点击“项目与交易”中“付款”下的“合同回款查询”
-		#icon("@res:hmo3ombd-vps7-uo6t-r75r-fkp9uldp9f7a.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*项目与交易*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		#icon("@res:di659qhl-1p2h-po6o-b64e-dpmlq3qund5e.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*付款*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		#icon("@res:en403q19-5mau-0r6s-b5j5-1nimghrsjnqc.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*合同回款查询*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		//等待"搜索"元素出现
-		#icon("@res:i69vakcv-at4l-7itg-jgqt-ps6tqiqdhteo.png")
-		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		//等待页面加载完成
-		startTime = Time.Now()
-		Do While True
-			timeDiff = Time.DateDiff("s",startTime,Time.Now())
-			If timeDiff < 60
-				//获取页面加载元素属性，style包含"display: none"表示加载完成
-				#icon("@res:hhoee54r-9jip-vpa7-lves-1n4j5dvshdet.png")
-				styleText = UiElement.GetAttribute({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","id":"loading_msg"}]},"style",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-				//TracePrint(styleText)
-				iRet = InStr(styleText,"display: none",1,False)
-				If iRet <> 0
-					Log.Info("成功加载【合同回款查询】页面，耗时"&timeDiff&"秒")
-					Delay(1000)
-					Break
-				Else
-					Continue
-				End If
-			Else
-				Throw "加载【合同回款查询】页面超时"
-			End If
-		Loop
-		//等待"签约客户/经销商"选择元素加载成功（加载中的圆圈元素消失）
-		#icon("@res:1jskt40o-06h0-a44m-6o7m-jnorhbtcsk23.png")
-		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"searchForm","isleaf":"1"}]},"hide",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		//选择“导出台账”为“里程碑付款&调整台帐”
-		#icon("@res:8e63i7rp-1hv8-vv6u-4sl3-bt1hk48clr4n.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"exportType_ddl","aaname":"里程碑付款&调整台帐"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False}) 
-	Else
-		//在"合同回款查询"页面，需要尝试点击系统的异常弹窗
-		#icon("@res:p6s6qf3c-r3ut-embu-c59b-7aoup0m054o3.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",1000,{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-	End If
-	
-	
-	//输入“华为合同号”
-	通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"INPUT","id":"contractNumber"}]},qryOrderNum)
-	//点击搜索
-	#icon("@res:e6j4pevn-pjae-3pvg-n3j2-av8m7h5sqeie.png")
-	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-	
-	//里程碑付款&调整台帐表未下载时执行
-	If Not isDownload
-		//点击导出
-		#icon("@res:348kv934-1aoc-5jat-4nk9-esh3pmlq2bpm.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"INPUT","id":"btnExcelExport"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		//等待导出弹窗“导出查询”元素出现
-		#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
-		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		
-		isJump = WebBrowser.SwitchTab(hWeb,"title","CFS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
-		If isJump = False
-			#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
-			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-			#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
-			UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-			等待加载完成()
-			#icon("@res:f8c64mlm-gu5l-moak-psn0-35adpid085e6.png")
-			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-			#icon("@res:j4c0r8hl-nctv-6o15-s7fq-sprcjpea0jeh.png")
-			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"cfs_ptn_contract_payment_back"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-			
-		End If
-		#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		等待加载完成()
-		tableHeadData = UiElement.DataScrap({"html":[{"id":"taskExportGridHeader","tag":"TABLE"}],"wnd":[{"app":"chrome","cls":"Chrome_WidgetWin_1","title":"*"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}]},{"Columns":[{"props":["text"],"selecors":[{"className":"igrid-head","index":0,"prefix":"","tag":"tbody","value":"tbody.igrid-head"},{"className":"","index":0,"prefix":">","tag":"tr","value":"tr"},{"index":0,"prefix":">","tag":"td","value":"td"},{"className":"igrid-innercell","index":0,"prefix":">","tag":"div","value":"div.igrid-innercell"}]}],"ExtractTable":0},{"objNextLinkElement":"","iMaxNumberOfPage":5,"iMaxNumberOfResult":-1,"iDelayBetweenMS":1000,"bContinueOnError":False})
-		TracePrint tableHeadData
-		nameCol = 0
-		statusCol = 0
-		For Each arr In tableHeadData
-			nameCol = nameCol + 1
-			If arr[0] = "文件名称"
-				nameCol = CStr(nameCol)
-				Break
-			End If
-		Next
-		For Each arr In tableHeadData
-			statusCol = statusCol + 1
-			If arr[0] = "导出状态"
-				statusCol = CStr(statusCol)
-				Break
-			End If
-		Next
-		TracePrint nameCol
-		TracePrint statusCol
-		#icon("@res:13c11610-4f1p-8i7e-lekb-a3mg8pd318i4.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		
-		
-		//查找导出项所在的行，默认超时时间300s
-		dTime = Time.Date()
-		nowDate = Time.Format(dTime,"yyyy-mm-dd")  //获取当天日期
-		Do While True
-			timeDiff = Time.DateDiff("s",startTime,Time.Now())
-			If timeDiff < 300 
-				#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
-				statusInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-				If InStr(statusInfo,"失败",1,False) <> 0
-					Throw "导出"&qryOrderNum&"失败，状态为："&statusInfo
-				End If
-				
-				If statusInfo <> "成功" // 状态为“等待”、“处理中”
-					Delay(5000)
-					#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
-					Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-					等待加载完成() 
-				Else
-					Break
-				End If
-			Else
-				Throw "华为合同号"&qryOrderNum&"的导出结果超时"
-			End If
-		Loop
-		Log.Info("成功获取到华为合同号为"&qryOrderNum&"的导出项")
-		
-		
-		//点击导出项的下载按钮
-		#icon("@res:ouehc17j-k9eq-76rp-vdpj-9b3vapcpne7g.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"message","bMoveSmoothly":False})
-		//等待文件名输入框出现
-		#icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
-		UiElement.Wait({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		//输入文件名
-		// #icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
-		// UiElement.SetValue({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		#icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
-		Keyboard.InputText({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,True,20,10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":500,"bSetForeground":True,"sSimulate":"uia","bValidate":False,"bClickBeforeInput":False})
-		//点击保存
-		#icon("@res:b636f62i-4moa-037q-jpba-5hf8ik645q6r.png")
-		Mouse.Action({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"Button","title":"保存(&S)","ctrlid":1,"aaname":"保存(S)"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		
-		//关闭“IExcel”tab页（导出文件下载页面）
-		WebBrowser.Close(hWeb,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		
-		//等待文件下载完成
-		startTime = Time.Now()  //开始时间
-		Do While True
-			timeDiff = Time.DateDiff("s",startTime,Time.Now())
-			If timeDiff < 300
-				bRet = File.FileExists(filePath)
-				If bRet
-					Log.Info("华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载完成，路径为："&filePath)
-					Break
-				End If
-			Else
-				Throw "华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载超时"
-			End If
-		Loop
-	End If
-	
-	//未获取该合同号的 激励金额/是否使用授信 时执行
-	If Not incentiveFlag
-		Try
-			//在“合同回款查询”页面中获取“使用激励金额”
-			#icon("@res:4r5m3eeb-6u9q-momg-98ij-85mv6vikj8ls.png")
-			UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","aaname":qryOrderNum}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-			//获取“使用激励金额”文本
-			#icon("@res:2qlvt52g-bka3-j9b4-6euv-clonff3geb7s.png")
-			amount = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"11"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-			//获取“是否使用授信”
-			#icon("@res:7h8gubu5-6b99-tnlg-fvoi-i4hbfc4pu9vd.png")
-			isCredit = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"12"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-			Log.Info("获取到合同号"&qryOrderNum&"激励金额为：" & amount & "；是否使用授信:" & isCredit)
-		Catch e
-			Log.Info("获取合同号"&qryOrderNum&"激励金额/是否使用授信异常，判断是否无合同回款信息汇总")
-			// 判断是否存在“无记录”的元素
-			#icon("@res:o429pk19-5h4m-i2vl-1rpn-mb57cfb0r4dj.png")
-			bRet = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"grddemandPaymentInfo_viewport","aaname":"无符合查询条件的记录。"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-			If bRet
-				amount = "0"
-				isCredit = "N"
-			Else
-				Throw "获取激励金额/是否使用授信异常且未检测到无记录标识"
-			End If
-		End Try
-		
-	End If	
-	
-	Return [filePath, Replace(amount,",","",False), Replace(isCredit," ","",False)]
+	Try 3
+        isDownload = False //文件下载标识
+        amount = None   //默认获取到的"使用激励金额"为None
+        isCredit = None   //默认获取到的"是否使用授信"为None
+        
+        Log.Info("用户:"&username&"开始下载"&qryOrderNum&"里程碑付款&调整台帐表")
+        
+        //文件名："登陆账号"_"订单号"_里程碑付款&调整台帐表.xlsx
+        filename = username&"_"&qryOrderNum&"_"&"里程碑付款&调整台帐表.xlsx"
+        filePath = saveDir & "\\" & filename
+        //判断文件是否已下载
+        If File.FileExists(filePath)
+            Log.Info("合同号为"&qryOrderNum&"的里程碑付款&调整台帐表已下载，路径为："&filePath)
+            isDownload = True
+        End If
+        
+        If isDownload And incentiveFlag
+            Log.Info("合同号为"&qryOrderNum&"的表及激励金额、是否使用授信均已获取")
+            Return [filePath, amount, isCredit]
+        End If
+        
+        //判断是否登陆
+        #icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
+        isOpen = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+        //未登录的情况需要重新登陆
+        If Not isOpen
+            登陆华为官网.登陆华为官网(url, username, pwd)
+            //绑定浏览器
+            hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+        Else
+            //绑定浏览器
+            hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+        End If
+        
+        //判断是否是需要登陆的用户
+        #icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
+        logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
+        logUser = Trim(logUser,None)
+        //已登录用户和需要登录的用户不同，需要重新登陆
+        If InStr(logUser,username,1,False) = 0
+            登陆华为官网.登陆华为官网(url, username, pwd)
+            //绑定浏览器
+            hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+        End If
+        
+        //判断是否在"合同回款查询"页面
+        #icon("@res:i69vakcv-at4l-7itg-jgqt-ps6tqiqdhteo.png")
+        isTruePage = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+        //不在"合同回款查询"页面，需要进入该页面并设置好相关配置
+        If Not isTruePage
+            //后台点击“项目与交易”中“付款”下的“合同回款查询”
+            #icon("@res:hmo3ombd-vps7-uo6t-r75r-fkp9uldp9f7a.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*项目与交易*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            #icon("@res:di659qhl-1p2h-po6o-b64e-dpmlq3qund5e.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*付款*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            #icon("@res:en403q19-5mau-0r6s-b5j5-1nimghrsjnqc.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*合同回款查询*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            //等待"搜索"元素出现
+            #icon("@res:i69vakcv-at4l-7itg-jgqt-ps6tqiqdhteo.png")
+            UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            //等待页面加载完成
+            startTime = Time.Now()
+            Do While True
+                timeDiff = Time.DateDiff("s",startTime,Time.Now())
+                If timeDiff < 60
+                    //获取页面加载元素属性，style包含"display: none"表示加载完成
+                    #icon("@res:hhoee54r-9jip-vpa7-lves-1n4j5dvshdet.png")
+                    styleText = UiElement.GetAttribute({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","id":"loading_msg"}]},"style",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                    //TracePrint(styleText)
+                    iRet = InStr(styleText,"display: none",1,False)
+                    If iRet <> 0
+                        Log.Info("成功加载【合同回款查询】页面，耗时"&timeDiff&"秒")
+                        Delay(1000)
+                        Break
+                    Else
+                        Continue
+                    End If
+                Else
+                    Throw "加载【合同回款查询】页面超时"
+                End If
+            Loop
+            //等待"签约客户/经销商"选择元素加载成功（加载中的圆圈元素消失）
+            #icon("@res:1jskt40o-06h0-a44m-6o7m-jnorhbtcsk23.png")
+            UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"searchForm","isleaf":"1"}]},"hide",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            //选择“导出台账”为“里程碑付款&调整台帐”
+            #icon("@res:8e63i7rp-1hv8-vv6u-4sl3-bt1hk48clr4n.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"exportType_ddl","aaname":"里程碑付款&调整台帐"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False}) 
+        Else
+            //在"合同回款查询"页面，需要尝试点击系统的异常弹窗
+            #icon("@res:p6s6qf3c-r3ut-embu-c59b-7aoup0m054o3.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",1000,{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+        End If
+        
+        
+        //输入“华为合同号”
+        通用模块.输入文本({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"INPUT","id":"contractNumber"}]},qryOrderNum)
+        //点击搜索
+        #icon("@res:e6j4pevn-pjae-3pvg-n3j2-av8m7h5sqeie.png")
+        Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+        
+        //里程碑付款&调整台帐表未下载时执行
+        If Not isDownload
+            //点击导出
+            #icon("@res:348kv934-1aoc-5jat-4nk9-esh3pmlq2bpm.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"INPUT","id":"btnExcelExport"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            //等待导出弹窗“导出查询”元素出现
+            #icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
+            UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            
+            isJump = WebBrowser.SwitchTab(hWeb,"title","CFS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
+            If isJump = False
+                #icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
+                Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+                #icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
+                UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                等待加载完成()
+                #icon("@res:f8c64mlm-gu5l-moak-psn0-35adpid085e6.png")
+                Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+                #icon("@res:j4c0r8hl-nctv-6o15-s7fq-sprcjpea0jeh.png")
+                Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"cfs_ptn_contract_payment_back"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+                
+            End If
+            #icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            等待加载完成()
+            tableHeadData = UiElement.DataScrap({"html":[{"id":"taskExportGridHeader","tag":"TABLE"}],"wnd":[{"app":"chrome","cls":"Chrome_WidgetWin_1","title":"*"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}]},{"Columns":[{"props":["text"],"selecors":[{"className":"igrid-head","index":0,"prefix":"","tag":"tbody","value":"tbody.igrid-head"},{"className":"","index":0,"prefix":">","tag":"tr","value":"tr"},{"index":0,"prefix":">","tag":"td","value":"td"},{"className":"igrid-innercell","index":0,"prefix":">","tag":"div","value":"div.igrid-innercell"}]}],"ExtractTable":0},{"objNextLinkElement":"","iMaxNumberOfPage":5,"iMaxNumberOfResult":-1,"iDelayBetweenMS":1000,"bContinueOnError":False})
+            TracePrint tableHeadData
+            nameCol = 0
+            statusCol = 0
+            For Each arr In tableHeadData
+                nameCol = nameCol + 1
+                If arr[0] = "文件名称"
+                    nameCol = CStr(nameCol)
+                    Break
+                End If
+            Next
+            For Each arr In tableHeadData
+                statusCol = statusCol + 1
+                If arr[0] = "导出状态"
+                    statusCol = CStr(statusCol)
+                    Break
+                End If
+            Next
+            TracePrint nameCol
+            TracePrint statusCol
+            #icon("@res:13c11610-4f1p-8i7e-lekb-a3mg8pd318i4.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            
+            
+            //查找导出项所在的行，默认超时时间300s
+            dTime = Time.Date()
+            nowDate = Time.Format(dTime,"yyyy-mm-dd")  //获取当天日期
+            Do While True
+                timeDiff = Time.DateDiff("s",startTime,Time.Now())
+                If timeDiff < 300 
+                    #icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
+                    statusInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                    If InStr(statusInfo,"失败",1,False) <> 0
+                        Throw "导出"&qryOrderNum&"失败，状态为："&statusInfo
+                    End If
+                    
+                    If statusInfo <> "成功" // 状态为“等待”、“处理中”
+                        Delay(5000)
+                        #icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
+                        Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+                        等待加载完成() 
+                    Else
+                        Break
+                    End If
+                Else
+                    Throw "华为合同号"&qryOrderNum&"的导出结果超时"
+                End If
+            Loop
+            Log.Info("成功获取到华为合同号为"&qryOrderNum&"的导出项")
+            
+            
+            //点击导出项的下载按钮
+            #icon("@res:ouehc17j-k9eq-76rp-vdpj-9b3vapcpne7g.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            //等待文件名输入框出现
+            #icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
+            UiElement.Wait({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            //输入文件名
+            // #icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
+            // UiElement.SetValue({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            #icon("@res:b05ec0u0-m3sq-hq9q-dqk6-63l2qmu8k8nr.png")
+            Keyboard.InputText({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"DUIViewWndClassName"},{"cls":"DirectUIHWND","aaname":"浏览器窗格"},{"cls":"FloatNotifySink"},{"cls":"ComboBox","aaname":"文件名:"},{"cls":"Edit","ctrlid":1001,"aaname":"文件名:"}]},filePath,True,20,10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":500,"bSetForeground":True,"sSimulate":"uia","bValidate":False,"bClickBeforeInput":False})
+            //点击保存
+            #icon("@res:b636f62i-4moa-037q-jpba-5hf8ik645q6r.png")
+            Mouse.Action({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"Button","title":"保存(&S)","ctrlid":1,"aaname":"保存(S)"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            
+            //关闭“IExcel”tab页（导出文件下载页面）
+            WebBrowser.Close(hWeb,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            #icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
+            Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+            
+            //等待文件下载完成
+            startTime = Time.Now()  //开始时间
+            Do While True
+                timeDiff = Time.DateDiff("s",startTime,Time.Now())
+                If timeDiff < 300
+                    bRet = File.FileExists(filePath)
+                    If bRet
+                        Log.Info("华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载完成，路径为："&filePath)
+                        Break
+                    End If
+                Else
+                    Throw "华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载超时"
+                End If
+            Loop
+        End If
+        
+        //未获取该合同号的 激励金额/是否使用授信 时执行
+        If Not incentiveFlag
+            Try
+                //在“合同回款查询”页面中获取“使用激励金额”
+                #icon("@res:4r5m3eeb-6u9q-momg-98ij-85mv6vikj8ls.png")
+                UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","aaname":qryOrderNum}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                //获取“使用激励金额”文本
+                #icon("@res:2qlvt52g-bka3-j9b4-6euv-clonff3geb7s.png")
+                amount = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"11"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                //获取“是否使用授信”
+                #icon("@res:7h8gubu5-6b99-tnlg-fvoi-i4hbfc4pu9vd.png")
+                isCredit = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"__gt_grddemandPaymentInfo_r_0","tableCol":"12"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                Log.Info("获取到合同号"&qryOrderNum&"激励金额为：" & amount & "；是否使用授信:" & isCredit)
+            Catch e
+                Log.Info("获取合同号"&qryOrderNum&"激励金额/是否使用授信异常，判断是否无合同回款信息汇总")
+                // 判断是否存在“无记录”的元素
+                #icon("@res:o429pk19-5h4m-i2vl-1rpn-mb57cfb0r4dj.png")
+                bRet = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"DIV","parentid":"grddemandPaymentInfo_viewport","aaname":"无符合查询条件的记录。"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                If bRet
+                    amount = "0"
+                    isCredit = "N"
+                Else
+                    Throw "获取激励金额/是否使用授信异常且未检测到无记录标识"
+                End If
+            End Try
+            
+        End If	
+        
+        Return [filePath, Replace(amount,",","",False), Replace(isCredit," ","",False)]
+    Catch e
+        Throw e
+    Else
+    End Try
 End Function
 
 
