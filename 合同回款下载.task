@@ -237,6 +237,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 					Throw "华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载超时"
 				End If
 			Loop
+            func.judFile(filePath, qryOrderNum)
 		End If
 		
 		//未获取该合同号的 激励金额/是否使用授信 时执行
