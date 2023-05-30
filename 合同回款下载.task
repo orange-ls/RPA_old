@@ -3,6 +3,7 @@
 创建时间：2022年11月09日
 下单费用核算流程
 */
+Dim objRet = ""
 Dim isJump = ""
 Dim arrayData = ""
 Dim paramInfo = ""
@@ -136,6 +137,8 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			//等待导出弹窗“导出查询”元素出现
 			#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
 			UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+			#icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
+			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
 			isJump = WebBrowser.SwitchTab(hWeb,"title","CFS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
 			If isJump = False
@@ -173,8 +176,6 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			Next
 			TracePrint nameCol
 			TracePrint statusCol
-			#icon("@res:13c11610-4f1p-8i7e-lekb-a3mg8pd318i4.png")
-			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
 			
 			//查找导出项所在的行，默认超时时间300s
@@ -221,8 +222,6 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			isJump = WebBrowser.SwitchTab(hWeb,"title","合同回款查询",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			
 			//关闭“IExcel”tab页（导出文件下载页面）
-			#icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
-			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
 			//等待文件下载完成
 			startTime = Time.Now()  //开始时间
@@ -303,8 +302,10 @@ url = "https://uniportal.huawei.com/uniportal/?redirect=https%3A%2F%2Fpartner.hu
 username = "hfszsm"
 pwd = "shenma2023Q1@"
 saveDir = "C:\\Users\\11598\\Desktop"
-res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y055021110037", saveDir,False)
+res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y03502206060Y", saveDir,False)
 Log.Info(res)
+objExcelWorkBook = Excel.OpenExcel("C:\\Users\\11598\\Desktop\\hfszsm_1Y02502111040F_里程碑付款&调整台帐表.xlsx",False,"Excel","","")
+objRet = Excel.ReadCell(objExcelWorkBook,"Sheet1","A5")
 
 
 
