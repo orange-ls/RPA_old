@@ -127,6 +127,12 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		//点击导出
 		#icon("@res:348kv934-1aoc-5jat-4nk9-esh3pmlq2bpm.png")
 		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"INPUT","id":"btnExcelExport"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+        //
+        Try
+            bRet = WebBrowser.SwitchTab(hWeb,"title","",{"bContinueOnError":false,"iDelayAfter":300,"iDelayBefore":200})
+        Catch ex
+            
+        End Try
 		//等待导出页面的“序号1”元素出现
 		#icon("@res:f78v4nt5-qun7-inva-1eke-p3mjtuotq11b.png")
 		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"DIV","parentid":"listTaskGrid_freeze_body","aaname":"1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
@@ -257,4 +263,6 @@ End Function
 // saveDir = "C:\\Users\\11598\\Desktop"
 // res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y055021110037", saveDir)
 // Log.Info(res)
+hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+bRet = WebBrowser.SwitchTab(hWeb,"title","CFS1",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 
