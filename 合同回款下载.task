@@ -174,18 +174,13 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
 		paramInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		#icon("@res:13c11610-4f1p-8i7e-lekb-a3mg8pd318i4.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 		
 		
 		//等待导出页面的“序号1”元素出现
-		#icon("@res:f78v4nt5-qun7-inva-1eke-p3mjtuotq11b.png")
-		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"DIV","parentid":"listTaskGrid_freeze_body","aaname":"1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		
 		
 		//查找导出项所在的行，默认超时时间300s
-		startTime = Time.Now()  //开始时间
-		finishFlag = False  //循环结束标识
-		row = "1" //导出项默认在第一条（index=1）
 		dTime = Time.Date()
 		nowDate = Time.Format(dTime,"yyyy-mm-dd")  //获取当天日期
 		Do While True
