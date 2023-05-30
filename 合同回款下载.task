@@ -152,24 +152,29 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 		等待加载完成()
 		tableHeadData = UiElement.DataScrap({"html":[{"id":"taskExportGridHeader","tag":"TABLE"}],"wnd":[{"app":"chrome","cls":"Chrome_WidgetWin_1","title":"*"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}]},{"Columns":[{"props":["text"],"selecors":[{"className":"igrid-head","index":0,"prefix":"","tag":"tbody","value":"tbody.igrid-head"},{"className":"","index":0,"prefix":">","tag":"tr","value":"tr"},{"index":0,"prefix":">","tag":"td","value":"td"},{"className":"igrid-innercell","index":0,"prefix":">","tag":"div","value":"div.igrid-innercell"}]}],"ExtractTable":0},{"objNextLinkElement":"","iMaxNumberOfPage":5,"iMaxNumberOfResult":-1,"iDelayBetweenMS":1000,"bContinueOnError":False})
-        nameCol = 0
-        statusCol = 0
-        For Each array In tableHeadData
-            nameCol = nameCol + 1
-            If array[0] = "文件名称"
-                Break
-            End If
-        Next
-        For Each array In tableHeadData
-            statusCol = statusCol + 1
-            If array[0] = "导出状态"
-                Break
-            End If
-        Next
-        TracePrint nameCol
-        TracePrint statusCol
+		TracePrint tableHeadData
+		nameCol = 0
+		statusCol = 0
+		For Each arr In tableHeadData
+			nameCol = nameCol + 1
+			If arr[0] = "文件名称"
+				nameCol = CStr(nameCol)
+				Break
+			End If
+		Next
+		For Each arr In tableHeadData
+			statusCol = statusCol + 1
+			If arr[0] = "导出状态"
+				statusCol = CStr(statusCol)
+				Break
+			End If
+		Next
+		TracePrint nameCol
+		TracePrint statusCol
 		#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
-		paramInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","isleaf":"1","tableRow":"3","tableCol":"5"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+		paramInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","isleaf":"1","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+		#icon("@res:rophqcsl-8mt1-drln-krsm-ecpspucnside.png")
+		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 		
 		
 		//等待导出页面的“序号1”元素出现
