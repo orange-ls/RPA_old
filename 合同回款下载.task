@@ -185,30 +185,18 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			timeDiff = Time.DateDiff("s",startTime,Time.Now())
 			If timeDiff < 300 
 				#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
-				paramInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-                If InStr(paramInfo,"失败",1,False) <> 0
-                    rao
-                Else
+				statusInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                If InStr(statusInfo,"失败",1,False) <> 0
+                    Throw "导出"&qryOrderNum&"失败，状态为："&statusInfo
+                End If
+
+                If statusInfo <> "成功" // 状态为“等待”、“处理中”
+                    Delay(5000)
                     
                 End If
 				//只查找结果页面的前15行
 				For i = 1 To 15 Step 1 
-					row = CStr(i)
-					//获取各行“参数信息”，并正则匹配出“华为合同号”
-					#icon("@res:ot4j80e0-fb94-q931-69jc-h639popgo91a.png")
-					paramInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"listTaskGrid_body"},{"tag":"TD","tableRow":row,"tableCol":"14"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-					arrRet = Regex.Find(paramInfo,"contractNumber=([A-Za-z0-9]+)")
-					number = arrRet[1]
-					//获取任务创建时间
-					#icon("@res:14n9udd2-0keh-a6k8-av3u-bl57h6rj30jf.png")
-					date = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"listTaskGrid_body"},{"tag":"TD","tableRow":row,"tableCol":"15"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-					//获取报表导出状态
-					#icon("@res:eqsbcdkf-klpi-tnrt-qsme-2td0gep1h65b.png")
-					status = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"listTaskGrid_body"},{"tag":"TD","tableRow":row,"tableCol":"9"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-					If number = qryOrderNum And InStr(date,nowDate,1,False) <> 0 And status = "成功"
-						finishFlag = True
-						Break
-					Else
+					
 						//若查询的15行数据结果条数均找到需要下载的“华为合同号”,或数据日期不为当天，或匹配到但状态不为成功，则点击查询刷新后继续判断
 						If i=15 Or InStr(date,nowDate,1,False) = 0 Or (number = qryOrderNum And InStr(date,nowDate,1,False) <> 0 And status <> "成功")
 							Log.Info("未获取到华为合同号为"&qryOrderNum&"的数据或导出状态为执行中，点击查询刷新后重新查找")
