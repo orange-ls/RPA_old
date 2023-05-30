@@ -171,8 +171,6 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		Next
 		TracePrint nameCol
 		TracePrint statusCol
-		#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
-		paramInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		#icon("@res:13c11610-4f1p-8i7e-lekb-a3mg8pd318i4.png")
 		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 		
@@ -186,6 +184,13 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		Do While True
 			timeDiff = Time.DateDiff("s",startTime,Time.Now())
 			If timeDiff < 300 
+				#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
+				paramInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+                If InStr(paramInfo,"失败",1,False) <> 0
+                    rao
+                Else
+                    
+                End If
 				//只查找结果页面的前15行
 				For i = 1 To 15 Step 1 
 					row = CStr(i)
