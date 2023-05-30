@@ -3,6 +3,7 @@
 创建时间：2022年11月09日
 下单费用核算流程
 */
+Dim isJump = ""
 Dim arrayData = ""
 Dim paramInfo = ""
 Dim startTime = ""
@@ -217,9 +218,9 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			//点击保存
 			#icon("@res:b636f62i-4moa-037q-jpba-5hf8ik645q6r.png")
 			Mouse.Action({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"Button","title":"保存(&S)","ctrlid":1,"aaname":"保存(S)"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+			isJump = WebBrowser.SwitchTab(hWeb,"title","合同回款查询",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			
 			//关闭“IExcel”tab页（导出文件下载页面）
-			WebBrowser.Close(hWeb,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			#icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
