@@ -124,33 +124,36 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			//等待导出弹窗“导出查询”元素出现
 			#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
 			UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-            //点击弹窗中的“确定”
+			//点击弹窗中的“确定”
 			#icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
-            //切换到导出（CFS）标签页，如果为false，说明CFS页未打开
+			//切换到导出（CFS）标签页，如果为false，说明CFS页未打开
 			isJump = WebBrowser.SwitchTab(hWeb,"title","CFS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
 			If isJump = False
-                //点击弹窗中的“导出查询”元素
+				//点击弹窗中的“导出查询”元素
 				#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
 				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-                //等待导出页面“搜索”元素出现
+				//等待导出页面“搜索”元素出现
 				#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
 				UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 				等待加载完成()
+                //点击任务类型下拉框并选择“cfs_ptn_contract_payment_back”
 				#icon("@res:f8c64mlm-gu5l-moak-psn0-35adpid085e6.png")
-				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 				#icon("@res:j4c0r8hl-nctv-6o15-s7fq-sprcjpea0jeh.png")
-				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"cfs_ptn_contract_payment_back"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"cfs_ptn_contract_payment_back"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 				
 			End If
+            // 点击“搜索”
 			#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			等待加载完成()
+            // 获取表头
 			tableHeadData = UiElement.DataScrap({"html":[{"id":"taskExportGridHeader","tag":"TABLE"}],"wnd":[{"app":"chrome","cls":"Chrome_WidgetWin_1","title":"*"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}]},{"Columns":[{"props":["text"],"selecors":[{"className":"igrid-head","index":0,"prefix":"","tag":"tbody","value":"tbody.igrid-head"},{"className":"","index":0,"prefix":">","tag":"tr","value":"tr"},{"index":0,"prefix":">","tag":"td","value":"td"},{"className":"igrid-innercell","index":0,"prefix":">","tag":"div","value":"div.igrid-innercell"}]}],"ExtractTable":0},{"objNextLinkElement":"","iMaxNumberOfPage":5,"iMaxNumberOfResult":-1,"iDelayBetweenMS":1000,"bContinueOnError":False})
 			TracePrint tableHeadData
-			nameCol = 0
-			statusCol = 0
+			nameCol = 0     //“文件名称”所在位置
+			statusCol = 0       //“导出状态”所在位置
 			For Each arr In tableHeadData
 				nameCol = nameCol + 1
 				If arr[0] = "文件名称"
@@ -168,13 +171,13 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			TracePrint nameCol
 			TracePrint statusCol
 			
-			
-			//查找导出项所在的行，默认超时时间300s
+			//判断第一行导出项任务是否完成，默认超时时间300s
 			dTime = Time.Date()
 			nowDate = Time.Format(dTime,"yyyy-mm-dd")  //获取当天日期
 			Do While True
 				timeDiff = Time.DateDiff("s",startTime,Time.Now())
-				If timeDiff < 300 
+				If timeDiff < 300
+                    //获取导出状态
 					#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
 					statusInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 					If InStr(statusInfo,"失败",1,False) <> 0
@@ -183,6 +186,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 					
 					If statusInfo <> "成功" // 状态为“等待”、“处理中”
 						Delay(5000)
+                        // 点击“搜索”，刷新导出结果
 						#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
 						Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 						等待加载完成() 
