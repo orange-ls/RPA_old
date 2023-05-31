@@ -50,25 +50,19 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 	End If
 	
 	Try 3
-		//判断是否登陆
-		//未登录的情况需要重新登陆
-		
-		//判断是否是需要登陆的用户
-		//已登录用户和需要登录的用户不同，需要重新登陆
-		
 		//判断"搜索"元素是否存在，确认是否已在合同回款查询页面
 		#icon("@res:i69vakcv-at4l-7itg-jgqt-ps6tqiqdhteo.png")
 		isOpen = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-        //判断当前登陆用户
+		//判断当前登陆用户
 		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
 		logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
 		logUser = Trim(logUser,None)
-		//不在"合同回款查询"页面，需要进入该页面并设置好相关配置
+		//不在"合同回款查询"页面或者当前登陆用户和操作用户不同则需要登陆并进入合同回款查询页
 		If Not isOpen Or InStr(logUser,username,1,False) = 0
 			登陆华为官网.登陆华为官网(url, username, pwd)
 			//绑定浏览器
 			hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-
+			
 			//后台点击“项目与交易”中“付款”下的“合同回款查询”
 			#icon("@res:hmo3ombd-vps7-uo6t-r75r-fkp9uldp9f7a.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*项目与交易*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
@@ -76,7 +70,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*付款*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			#icon("@res:en403q19-5mau-0r6s-b5j5-1nimghrsjnqc.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*合同回款查询*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-
+			
 			//等待"搜索"元素出现
 			#icon("@res:i69vakcv-at4l-7itg-jgqt-ps6tqiqdhteo.png")
 			UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
@@ -108,7 +102,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			#icon("@res:8e63i7rp-1hv8-vv6u-4sl3-bt1hk48clr4n.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"exportType_ddl","aaname":"里程碑付款&调整台帐"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False}) 
 		Else
-            //绑定浏览器
+			//绑定浏览器
 			hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			//在"合同回款查询"页面，需要尝试点击系统的异常弹窗(可能出现，所以该操作设置为异常继续执行)
 			#icon("@res:p6s6qf3c-r3ut-embu-c59b-7aoup0m054o3.png")
@@ -130,9 +124,11 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			//等待导出弹窗“导出查询”元素出现
 			#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
 			UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+            //点击弹窗中的“确定”
 			#icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
+            //切换到导出（CFS）
 			isJump = WebBrowser.SwitchTab(hWeb,"title","CFS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
 			If isJump = False
 				#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
