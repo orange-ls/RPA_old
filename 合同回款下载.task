@@ -225,10 +225,11 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 					bRet = File.FileExists(filePath)
 					If bRet
 						Log.Info("华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载完成，路径为："&filePath)
-                        Delay(1000)
+						Delay(1000)
 						Break
-                    Else
-                        Delay(2000)
+					Else
+						Delay(2000)
+						Continue
 					End If
 				Else
 					Throw "华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载超时"
@@ -236,6 +237,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			Loop
 			
 			//判断下载的表是否为该合同号的付款表，如果不是会抛出异常
+			Delay(30000)
 			func.judFile(filePath, qryOrderNum)
 		End If
 		
