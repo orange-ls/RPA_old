@@ -199,7 +199,6 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			Loop
 			Log.Info("成功获取到华为合同号为"&qryOrderNum&"的导出项")
 			
-			
 			//点击导出项的下载按钮
 			#icon("@res:ouehc17j-k9eq-76rp-vdpj-9b3vapcpne7g.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"A","tableRow":"3","tableCol":nameCol}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
@@ -214,7 +213,9 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			//点击保存
 			#icon("@res:b636f62i-4moa-037q-jpba-5hf8ik645q6r.png")
 			Mouse.Action({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"Button","title":"保存(&S)","ctrlid":1,"aaname":"保存(S)"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-			isJump = WebBrowser.SwitchTab(hWeb,"title","合同回款查询",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+			
+			//切换到合同回款查询标签
+			WebBrowser.SwitchTab(hWeb,"title","合同回款查询",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			
 			//等待文件下载完成
 			startTime = Time.Now()  //开始时间
@@ -224,7 +225,10 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 					bRet = File.FileExists(filePath)
 					If bRet
 						Log.Info("华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载完成，路径为："&filePath)
+                        Delay(1000)
 						Break
+                    Else
+                        Delay(2000)
 					End If
 				Else
 					Throw "华为合同号为"&qryOrderNum&"的里程碑付款&调整台帐表下载超时"
