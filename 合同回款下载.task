@@ -128,11 +128,13 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			#icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
-            //切换到导出（CFS）
+            //切换到导出（CFS）标签页，如果为false，说明CFS页未打开
 			isJump = WebBrowser.SwitchTab(hWeb,"title","CFS",{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
 			If isJump = False
+                //点击弹窗中的“导出查询”元素
 				#icon("@res:33l0pbug-cnnt-6flt-rj9m-blnfhd2r51vo.png")
 				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"FONT","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+                //等待导出页面“搜索”元素出现
 				#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
 				UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 				等待加载完成()
