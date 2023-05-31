@@ -213,7 +213,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			
 			//切换到合同回款查询标签
 			WebBrowser.SwitchTab(hWeb,"title","合同回款查询",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-            //点击导出弹窗中的“确定”
+			//点击导出弹窗中的“确定”
 			#icon("@res:6n5f59vo-gnmk-v67s-k6vq-hit42fp49541.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","parentid":"jalor_dialog*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			
