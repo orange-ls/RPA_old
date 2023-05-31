@@ -138,18 +138,18 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 				#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
 				UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 				等待加载完成()
-                //点击任务类型下拉框并选择“cfs_ptn_contract_payment_back”
+				//点击任务类型下拉框并选择“cfs_ptn_contract_payment_back”
 				#icon("@res:f8c64mlm-gu5l-moak-psn0-35adpid085e6.png")
 				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 				#icon("@res:j4c0r8hl-nctv-6o15-s7fq-sprcjpea0jeh.png")
 				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"cfs_ptn_contract_payment_back"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 				
 			End If
-            // 点击“搜索”
+			// 点击“搜索”
 			#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			等待加载完成()
-            // 获取表头
+			// 获取表头
 			tableHeadData = UiElement.DataScrap({"html":[{"id":"taskExportGridHeader","tag":"TABLE"}],"wnd":[{"app":"chrome","cls":"Chrome_WidgetWin_1","title":"*"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}]},{"Columns":[{"props":["text"],"selecors":[{"className":"igrid-head","index":0,"prefix":"","tag":"tbody","value":"tbody.igrid-head"},{"className":"","index":0,"prefix":">","tag":"tr","value":"tr"},{"index":0,"prefix":">","tag":"td","value":"td"},{"className":"igrid-innercell","index":0,"prefix":">","tag":"div","value":"div.igrid-innercell"}]}],"ExtractTable":0},{"objNextLinkElement":"","iMaxNumberOfPage":5,"iMaxNumberOfResult":-1,"iDelayBetweenMS":1000,"bContinueOnError":False})
 			TracePrint tableHeadData
 			nameCol = 0     //“文件名称”所在位置
@@ -177,7 +177,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			Do While True
 				timeDiff = Time.DateDiff("s",startTime,Time.Now())
 				If timeDiff < 300
-                    //获取导出状态
+					//获取导出状态
 					#icon("@res:anjup9ku-9bmk-2gg9-g2f8-dintn0b1436e.png")
 					statusInfo = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"TABLE","id":"taskExportGridTable"},{"tag":"TD","tableRow":"3","tableCol":statusCol}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 					If InStr(statusInfo,"失败",1,False) <> 0
@@ -186,7 +186,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 					
 					If statusInfo <> "成功" // 状态为“等待”、“处理中”
 						Delay(5000)
-                        // 点击“搜索”，刷新导出结果
+						// 点击“搜索”，刷新导出结果
 						#icon("@res:e4j2olrs-99km-9g3b-aq6g-hdqpnm7rsdl5.png")
 						Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 						等待加载完成() 
@@ -216,8 +216,6 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 			Mouse.Action({"wnd":[{"app":"chrome","cls":"#32770","title":"另存为"},{"cls":"Button","title":"保存(&S)","ctrlid":1,"aaname":"保存(S)"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 			isJump = WebBrowser.SwitchTab(hWeb,"title","合同回款查询",{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 			
-			//关闭“IExcel”tab页（导出文件下载页面）
-			
 			//等待文件下载完成
 			startTime = Time.Now()  //开始时间
 			Do While True
@@ -233,7 +231,7 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 				End If
 			Loop
 			
-			//判断下载的表是否为该合同号的付款表
+			//判断下载的表是否为该合同号的付款表，如果不是会抛出异常
 			func.judFile(filePath, qryOrderNum)
 		End If
 		
@@ -302,4 +300,5 @@ pwd = "shenma2023Q1@"
 saveDir = "C:\\Users\\11598\\Desktop"
 res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y03502206060Y", saveDir,False)
 Log.Info(res)
+
 
