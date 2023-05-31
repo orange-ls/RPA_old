@@ -64,9 +64,6 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		End If
 		
 		//判断是否是需要登陆的用户
-		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
-		logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
-		logUser = Trim(logUser,None)
 		//已登录用户和需要登录的用户不同，需要重新登陆
 		If InStr(logUser,username,1,False) = 0
 			登陆华为官网.登陆华为官网(url, username, pwd)
@@ -76,9 +73,12 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 		
 		//判断是否在"合同回款查询"页面
 		#icon("@res:i69vakcv-at4l-7itg-jgqt-ps6tqiqdhteo.png")
-		isTruePage = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+		isOpen = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/CFS/eptn/#!payment/searchPaymentInqui*"},{"tag":"SPAN","id":"btnSearch"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
+		logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
+		logUser = Trim(logUser,None)
 		//不在"合同回款查询"页面，需要进入该页面并设置好相关配置
-		If Not isTruePage
+		If Not isOpen
 			//后台点击“项目与交易”中“付款”下的“合同回款查询”
 			#icon("@res:hmo3ombd-vps7-uo6t-r75r-fkp9uldp9f7a.png")
 			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*项目与交易*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
@@ -310,33 +310,33 @@ Log.Info(res)
 
 
 //判断"明细"元素是否存在，确认是否已在华为业绩表下载页面
+#icon("@res:3dc6rq17-o7ue-m0oa-gspr-vio0i3d4damq.png")
+isOpen = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eppc/#/eppc/hwcloudperformance?type=i*"},{"tag":"DIV","id":"tab-detailSumTab"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+//判断当前登陆用户
+#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
+logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
+logUser = Trim(logUser,None)
+//不在华为业绩表下载页面或者当前登陆用户和操作用户不同则需要登陆并进入下载页
+If Not isOpen Or InStr(logUser,username,1,False) = 0
+	登陆华为官网.登陆华为官网(url, username, pwd)
+	//绑定浏览器
+	hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	
+	//后台点击“经营管理”中“我的业绩”下的“业绩查询/伙伴业绩查询”
+	#icon("@res:ijjjidup-bell-v39i-d2qs-67vs5aoc6723.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*经营管理*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	#icon("@res:ltjgsr1a-r9jl-h573-cg75-t1hk30c6t1cs.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*我的业绩*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	#icon("@res:nlu2roou-bmup-r7qh-s4ve-tcnku24uso6d.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*伙伴业绩查询*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+	
+	//等待"明细"元素出现并点击
 	#icon("@res:3dc6rq17-o7ue-m0oa-gspr-vio0i3d4damq.png")
-	isOpen = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eppc/#/eppc/hwcloudperformance?type=i*"},{"tag":"DIV","id":"tab-detailSumTab"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	//判断当前登陆用户
-	#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
-	logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200})
-	logUser = Trim(logUser,None)
-	//不在华为业绩表下载页面或者当前登陆用户和操作用户不同则需要登陆并进入下载页
-	If Not isOpen Or InStr(logUser,username,1,False) = 0
-		登陆华为官网.登陆华为官网(url, username, pwd)
-		//绑定浏览器
-		hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-		
-		//后台点击“经营管理”中“我的业绩”下的“业绩查询/伙伴业绩查询”
-		#icon("@res:ijjjidup-bell-v39i-d2qs-67vs5aoc6723.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*经营管理*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		#icon("@res:ltjgsr1a-r9jl-h573-cg75-t1hk30c6t1cs.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*我的业绩*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		#icon("@res:nlu2roou-bmup-r7qh-s4ve-tcnku24uso6d.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*伙伴业绩查询*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-		
-		//等待"明细"元素出现并点击
-		#icon("@res:3dc6rq17-o7ue-m0oa-gspr-vio0i3d4damq.png")
-		UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eppc/#/eppc/hwcloudperformance?type=i*"},{"tag":"DIV","id":"tab-detailSumTab"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200})
-		#icon("@res:3dc6rq17-o7ue-m0oa-gspr-vio0i3d4damq.png")
-		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eppc/#/eppc/hwcloudperformance?type=i*"},{"tag":"DIV","id":"tab-detailSumTab"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-	Else
-		//绑定浏览器
-		hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	End If
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eppc/#/eppc/hwcloudperformance?type=i*"},{"tag":"DIV","id":"tab-detailSumTab"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200})
+	#icon("@res:3dc6rq17-o7ue-m0oa-gspr-vio0i3d4damq.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"IFRAME","src":"https://partner.huawei.com/eppc/#/eppc/hwcloudperformance?type=i*"},{"tag":"DIV","id":"tab-detailSumTab"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":1000,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+Else
+	//绑定浏览器
+	hWeb = WebBrowser.BindBrowser("chrome",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+End If
 
