@@ -136,10 +136,14 @@ Function 里程碑付款_调整台帐下载(url, username, pwd, qryOrderNum, sav
 				UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","parentid":"_item1"}]},"show",60000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 				等待加载完成()
 				//点击任务类型下拉框并选择“cfs_ptn_contract_payment_back_gauss”
-				#icon("@res:f8c64mlm-gu5l-moak-psn0-35adpid085e6.png")
-				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
-				#icon("@res:j4c0r8hl-nctv-6o15-s7fq-sprcjpea0jeh.png")
-				Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"cfs_ptn_contract_payment_back_gauss"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+				// #icon("@res:f8c64mlm-gu5l-moak-psn0-35adpid085e6.png")
+				// Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","parentid":"searchForm"}]},"left","click",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+				// #icon("@res:j4c0r8hl-nctv-6o15-s7fq-sprcjpea0jeh.png")
+				// Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"cfs_ptn_contract_payment_back_gauss"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+				
+				//筛选文件名称
+				#icon("@res:bjvtv2ah-1c72-d2uc-iafd-cqv0mllr4kc3.png")
+				Keyboard.InputText({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","name":"tmpName"}]},"cfs_ptn_contract_payment_back",True,20,10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":500,"bSetForeground":True,"sSimulate":"message","bValidate":False,"bClickBeforeInput":False})
 				
 			End If
 			// 点击“搜索”
@@ -308,7 +312,7 @@ End Function
 url = "https://uniportal.huawei.com/uniportal/?redirect=https%3A%2F%2Fpartner.huawei.com%2Feplus%2F%23%2Fcn%2Fgroup%2Fcn-cp"
 username = "hfszsm"
 pwd = "shenma2023Q1@"
-saveDir = "C:\\Users\\11598\\Desktop"
+saveDir = "F:\\Uibot项目"
 res = 里程碑付款_调整台帐下载(url, username, pwd, "1Y05102206360T", saveDir,False)
 Log.Info(res)
 
