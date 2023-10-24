@@ -3,6 +3,7 @@
 创建时间：2022年06月22日
 下单费用流程
 */
+Dim sRet = ""
 Dim iRet = ""
 Dim logUser = ""
 Dim hWeb = ""
@@ -60,7 +61,7 @@ Function 登陆华为官网(url, username, pwd)
 		#icon("@res:63s80fpe-slpl-82eq-toj2-m686juudq5gg.png")
 		logUser = UiElement.GetValue({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","css-selector":"span.userBox"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
 		logUser = Trim(logUser,None)
-		If logUser = username
+		If InStr(logUser,username,1,False) <> 0
 			Log.Info("账号："&username&"已登录,跳过登陆")
 		Else
 			Log.Info("账号："&logUser&"已登录同需要登陆账号："&username&"不同，退出登录后重新打开网页")
@@ -87,12 +88,56 @@ Function 登陆华为官网(url, username, pwd)
 		Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"INPUT","type":"button"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
 	End If
 	
-	//等待账号名称元素出现
-	// #icon("@res:j7fd9hfu-8u39-uh4n-i0ga-beivgo1um2ld.png")
-	// UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"FONT","parentid":"$1600540765986","isleaf":"1"}]},"show",15000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
-	#icon("@res:2f901mtv-6psf-smni-jb5q-7i8uve91a5oe.png")
-	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"P","isleaf":"1"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+	
+	//判断登陆后页面是新版页面还是旧版，旧版页面需要切换为新版，超时时间为90s,由于有时会切换失败，所以加入循环进行重试
+	oldFlag = True
+	For i = 0 To 5 Step 1 
+		startTime = Time.Now()  //开始时间
+		Do While True
+			timeDiff = Time.DateDiff("s",startTime,Time.Now())
+			If timeDiff < 90
+				// 判断旧版页面中的“修改公司基本信息”元素是否出现
+				#icon("@res:do3ptkjq-8o7j-l24l-6ni5-7hpe04a136sr.png")
+				bRet1 = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"A","aaname":"修改公司基本信息"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+				TracePrint bRet1
+				If bRet1
+					Log.Info("检测到旧版页面")
+					Break
+				End If
+				// 判断新版页面中的“公司名称”元素是否出现
+				#icon("@res:cf2eblcd-pk8o-hlhe-lsh1-jcfrv6mo34jd.png")
+				bRet2 = UiElement.Exists({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*公司"}]},{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200})
+				TracePrint bRet2
+				If bRet2
+					oldFlag = False
+					Log.Info("检测到新版页面")
+					Break
+				End If
+			Else
+				Throw "登陆后判断新旧版页面超时"
+			End If
+		Loop
+		
+		If oldFlag
+			// 处于旧版页面时需要点击“切换新版本”
+			#icon("@res:7ksplhrp-shsq-119e-oukl-aoouiijeroln.png")
+			Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"DIV","aaname":"*切换*版本*"}]},"left","click",10000,{"bContinueOnError":False,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})  
+		Else
+			Break
+		End If
+		
+	Next
+	
+	// 等待“公司名称”元素出现
+	#icon("@res:cf2eblcd-pk8o-hlhe-lsh1-jcfrv6mo34jd.png")
+	UiElement.Wait({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"*公司"}]},"show",30000,{"bContinueOnError":False,"iDelayAfter":3000,"iDelayBefore":200})	
+	
 	Log.Info("用户："&username&"华为网站登录成功")
+
+    // 关闭弹窗
+	#icon("@res:9q90ilt1-2nhj-k8lj-u9pa-0q3rnnh7j6bm.png")
+	Mouse.Action({"wnd":[{"cls":"Chrome_WidgetWin_1","title":"*","app":"chrome"},{"cls":"Chrome_RenderWidgetHostHWND","title":"Chrome Legacy Window"}],"html":[{"tag":"SPAN","aaname":"继续使用旧版本*"}]},"left","click",2000,{"bContinueOnError":True,"iDelayAfter":300,"iDelayBefore":200,"bSetForeground":True,"sCursorPosition":"Center","iCursorOffsetX":0,"iCursorOffsetY":0,"sKeyModifiers":[],"sSimulate":"uia","bMoveSmoothly":False})
+
 	
 End Function
 
